@@ -4,14 +4,14 @@
     <div class="row col-md-12">
         <asp:Label ID="lblStatusMsg" runat="server" Text=""></asp:Label>
     </div>
-    <div class="row card">
+    <div class="row card my-2">
         <div class="card-header">Environment</div>
         <div class="card-body">
             <asp:RadioButtonList ID="rblistEpicICEnvs" runat="server" RepeatDirection="Horizontal" CellPadding="5">
             </asp:RadioButtonList>
         </div>
     </div>
-    <div class="row card">
+    <div class="row card my-2">
         <div class="card-header">Department List</div>
         <div class="card-body">
             <div class="py-1">
@@ -29,7 +29,7 @@
             </div>
         </div>
     </div>
-    <div class="row card">
+    <div class="row card my-2">
         <div class="card-header">Lab Accounts (AIF-500000)</div>
         <div class="card-body">
             <div class="py-1">

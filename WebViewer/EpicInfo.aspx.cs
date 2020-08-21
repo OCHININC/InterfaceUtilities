@@ -1,9 +1,7 @@
 ﻿using org.ochin.interoperability.OCHINInterfaceUtilities.Epic;
-using org.ochin.interoperability.OCHINInterfaceUtilities.Utilities;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
-using System.IO;
 using System.Text;
 using System.Web.UI;
 using System.Web.UI.WebControls;
@@ -12,52 +10,61 @@ namespace org.ochin.interoperability.OCHINInterfaceUtilities
 {
     public partial class EpicInfo : Page
     {
-        private static Dictionary<string, string> EpicICServers = new Dictionary<string, string>();
+        private static readonly string SessionKey_EpicInfo_EpicICServers = "EpicInfo_EpicICServers";
 
-        private static List<string> Deps = new List<string>();
-        private static List<string> LabAccts = new List<string>();
+        private static readonly string ViewStateKey_EpicInfo_Deps = "EpicInfo_Deps";
+        private static readonly string ViewStateKey_EpicInfo_LabAccts = "EpicInfo_LabAccts";
 
         protected void Page_Load(object sender, EventArgs e)
         {
-            if (!IsPostBack)
+            if (Session[SessionKey_EpicInfo_EpicICServers] == null)
             {
                 ReadConfig();
-                PopulateEnvironments();
+            }
 
-                Deps.Clear();
+            if (!IsPostBack)
+            {
+                PopulateEnvironments();
             }
             else
             {
-                ConvertListToTable(Deps, tblDepList);
-                ConvertListToTable(LabAccts, tblLabAccts);
+                ConvertDepListToTable();
+                ConvertLabAcctsListToTable();
             }
         }
 
         private void ReadConfig()
         {
+            Dictionary<string, string> epicICServers = new Dictionary<string, string>();
+
             foreach (string key in ConfigurationManager.AppSettings.AllKeys)
             {
                 string[] k = key.Split('|');
                 if ((k.Length > 1) && (k[0].ToUpper() == "EPICIC"))
                 {
-                    if (!EpicICServers.ContainsKey(k[1]))
+                    if (!epicICServers.ContainsKey(k[1]))
                     {
-                        EpicICServers.Add(k[1], ConfigurationManager.AppSettings[key]);
+                        epicICServers.Add(k[1], ConfigurationManager.AppSettings[key]);
                     }
                 }
             }
+
+            Session[SessionKey_EpicInfo_EpicICServers] = epicICServers;
         }
 
         private void PopulateEnvironments()
         {
-            rblistEpicICEnvs.Items.Clear();
-
-            foreach (var pair in EpicICServers)
+            if (Session[SessionKey_EpicInfo_EpicICServers] != null)
             {
-                rblistEpicICEnvs.Items.Add(new ListItem(pair.Key, pair.Value, true));
-            }
+                rblistEpicICEnvs.Items.Clear();
 
-            rblistEpicICEnvs.SelectedIndex = 0;
+                foreach (var pair in (Dictionary<string, string>)Session[SessionKey_EpicInfo_EpicICServers])
+                {
+                    rblistEpicICEnvs.Items.Add(new ListItem(pair.Key, pair.Value, true));
+                }
+
+                rblistEpicICEnvs.SelectedIndex = 0;
+            }
         }
 
         protected void btnGetDepList_Click(object sender, EventArgs e)
@@ -66,14 +73,14 @@ namespace org.ochin.interoperability.OCHINInterfaceUtilities
 
             if (EpicICVM != null)
             {
-                Deps.Clear();
-                bool ret = EpicICVM.GetDepList(tbSA.Text, tbIIT.Text, out Deps, out string response);
+                bool ret = EpicICVM.GetDepList(tbSA.Text, tbIIT.Text, out List<string> deps, out string response);
+                ViewState[ViewStateKey_EpicInfo_Deps] = deps;
 
                 if (ret)
                 {
                     lblStatusMsg.Text = string.Empty;
 
-                    ConvertListToTable(Deps, tblDepList);
+                    ConvertDepListToTable();
                 }
                 else
                 {
@@ -88,18 +95,38 @@ namespace org.ochin.interoperability.OCHINInterfaceUtilities
 
             if (EpicICVM != null)
             {
-                bool ret = EpicICVM.GetLabAccts(out LabAccts, out string response);
+
+                bool ret = EpicICVM.GetLabAccts(out List<string> labAccts, out string response);
+                ViewState[ViewStateKey_EpicInfo_LabAccts] = labAccts;
 
                 if (ret)
                 {
                     lblStatusMsg.Text = string.Empty;
 
-                    ConvertListToTable(LabAccts, tblLabAccts);
+                    ConvertLabAcctsListToTable();
                 }
                 else
                 {
                     lblStatusMsg.Text = response;
                 }
+            }
+        }
+
+        private void ConvertDepListToTable()
+        {
+            var deps = (List<string>)ViewState[ViewStateKey_EpicInfo_Deps];
+            if (deps != null)
+            {
+                ConvertListToTable(deps, tblDepList);
+            }
+        }
+
+        private void ConvertLabAcctsListToTable()
+        {
+            var labAccts = (List<string>)ViewState[ViewStateKey_EpicInfo_LabAccts];
+            if (labAccts != null)
+            {
+                ConvertListToTable(labAccts, tblLabAccts);
             }
         }
 
@@ -127,16 +154,16 @@ namespace org.ochin.interoperability.OCHINInterfaceUtilities
 
         private EpicInterConnectVM GetSelectedEpicICEnv()
         {
-            string selected = rblistEpicICEnvs.SelectedItem?.Text;
+            string selectedValue = rblistEpicICEnvs.SelectedItem?.Value;
 
-            if (!string.IsNullOrEmpty(selected) && EpicICServers.TryGetValue(selected, out string epicICBaseUrl))
+            if (!string.IsNullOrEmpty(selectedValue))
             {
                 lblStatusMsg.Text = string.Empty;
-                return new EpicInterConnectVM(epicICBaseUrl);
+                return new EpicInterConnectVM(selectedValue);
             }
             else
             {
-                lblStatusMsg.Text = "Unrecognized Epic InterConnect environment: " + selected;
+                lblStatusMsg.Text = "Unrecognized Epic InterConnect environment: " + rblistEpicICEnvs.SelectedItem?.Text;
             }
 
             return null;
@@ -144,12 +171,18 @@ namespace org.ochin.interoperability.OCHINInterfaceUtilities
 
         protected void lbtnDownloadDepList_Click(object sender, EventArgs e)
         {
-            DownloadListAsCsv(Deps, "DepList.csv");
+            if (ViewState[ViewStateKey_EpicInfo_Deps] != null)
+            {
+                DownloadListAsCsv((List<string>)ViewState[ViewStateKey_EpicInfo_Deps], "DepList.csv");
+            }
         }
 
         protected void lbtnDownloadLabAccts_Click(object sender, EventArgs e)
         {
-            DownloadListAsCsv(LabAccts, "LabAccts.csv");
+            if (ViewState[ViewStateKey_EpicInfo_LabAccts] != null)
+            {
+                DownloadListAsCsv((List<string>)ViewState[ViewStateKey_EpicInfo_LabAccts], "LabAccts.csv");
+            }
         }
 
         private void DownloadListAsCsv(List<string> list, string filename)

@@ -42,7 +42,7 @@
                 </div>
                 <asp:Panel runat="server" GroupingText="Search Results">
                     <div class="col-md-12">
-                        <asp:TextBox ID="tbSearchResults" runat="server" ReadOnly="True" TextMode="MultiLine" Width="100%" Height="250px"></asp:TextBox>
+                        <asp:TextBox ID="tbSearchResults" runat="server" ReadOnly="True" TextMode="MultiLine" Width="100%" Height="250px" ValidateRequestMode="Disabled"></asp:TextBox>
                     </div>
                 </asp:Panel>
             </div>

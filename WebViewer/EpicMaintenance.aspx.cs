@@ -15,25 +15,51 @@ namespace org.ochin.interoperability.OCHINInterfaceUtilities
 {
     public partial class EpicMaintenance : Page
     {
-        public static Dictionary<string, string> MirthServers = new Dictionary<string, string>();
-        public static Dictionary<string, string> PentraServers = new Dictionary<string, string>();
+        private static readonly string SessionKey_EpicMaint_Mirth_LoggedInUser = "EpicMaint_Mirth_LoggedInUser";
+        private static readonly string SessionKey_EpicMaint_Mirth_Servers = "EpicMaint_Mirth_Servers";
+        private static readonly string SessionKey_EpicMaint_Mirth_VM = "EpicMaint_Mirth_VM";
 
-        private static MirthRestApiVM MirthVM;
-        private static PentraVM PentraVM;
+        private static readonly string SessionKey_EpicMaint_Pentra_LoggedInUser = "EpicMaint_Pentra_LoggedInUser";
+        private static readonly string SessionKey_EpicMaint_Pentra_Servers = "EpicMaint_Pentra_Servers";
+        private static readonly string SessionKey_EpicMaint_Pentra_VM = "EpicMaint_Pentra_VM";
 
         protected void Page_Load(object sender, EventArgs e)
         {
-            if (!IsPostBack)
+            if (Session[SessionKey_EpicMaint_Mirth_Servers] == null || Session[SessionKey_EpicMaint_Pentra_Servers] == null)
             {
                 ReadConfig();
+            }
+
+            if (!IsPostBack)
+            {
                 PopulateEnvironments();
+
+                string mirthLoggedInUser = (string)Session[SessionKey_EpicMaint_Mirth_LoggedInUser];
+                if (!string.IsNullOrEmpty(mirthLoggedInUser))
+                {
+                    MirthUserLoggedIn();
+                }
+                else
+                {
+                    MirthUserLoggedOut();
+                }
+
+                string pentraLoggedInUser = (string)Session[SessionKey_EpicMaint_Pentra_LoggedInUser];
+                if (!string.IsNullOrEmpty(pentraLoggedInUser))
+                {
+                    PentraUserLoggedIn();
+                }
+                else
+                {
+                    PentraUserLoggedOut();
+                }
             }
         }
 
         private void ReadConfig()
         {
-            MirthServers.Clear();
-            PentraServers.Clear();
+            Dictionary<string, string> mirthServers = new Dictionary<string, string>();
+            Dictionary<string, string> pentraServers = new Dictionary<string, string>();
 
             foreach (string key in ConfigurationManager.AppSettings.AllKeys)
             {
@@ -43,34 +69,43 @@ namespace org.ochin.interoperability.OCHINInterfaceUtilities
                     switch (k[1].ToUpper())
                     {
                         case "MIRTH":
-                            MirthServers.Add(k[2], ConfigurationManager.AppSettings[key]);
+                            mirthServers.Add(k[2], ConfigurationManager.AppSettings[key]);
                             break;
                         case "PENTRA":
-                            PentraServers.Add(k[2], ConfigurationManager.AppSettings[key]);
+                            pentraServers.Add(k[2], ConfigurationManager.AppSettings[key]);
                             break;
                         default:
                             break;
                     }
                 }
             }
+
+            Session[SessionKey_EpicMaint_Mirth_Servers] = mirthServers;
+            Session[SessionKey_EpicMaint_Pentra_Servers] = pentraServers;
         }
 
         private void PopulateEnvironments()
         {
             rblistMirthEnvs.Items.Clear();
 
-            foreach (var pair in MirthServers)
+            if (Session[SessionKey_EpicMaint_Mirth_Servers] != null)
             {
-                rblistMirthEnvs.Items.Add(new ListItem(pair.Key, pair.Value, true));
+                foreach (var pair in (Dictionary<string, string>)Session[SessionKey_EpicMaint_Mirth_Servers])
+                {
+                    rblistMirthEnvs.Items.Add(new ListItem(pair.Key, pair.Value, true));
+                }
             }
 
             rblistMirthEnvs.SelectedIndex = 0;
 
             rblistPentraEnvs.Items.Clear();
 
-            foreach (var pair in PentraServers)
+            if (Session[SessionKey_EpicMaint_Mirth_Servers] != null)
             {
-                rblistPentraEnvs.Items.Add(new ListItem(pair.Key, pair.Value, true));
+                foreach (var pair in (Dictionary<string, string>)Session[SessionKey_EpicMaint_Pentra_Servers])
+                {
+                    rblistPentraEnvs.Items.Add(new ListItem(pair.Key, pair.Value, true));
+                }
             }
 
             rblistPentraEnvs.SelectedIndex = 0;
@@ -78,16 +113,14 @@ namespace org.ochin.interoperability.OCHINInterfaceUtilities
 
         protected void btnMirthLogin_Click(object sender, EventArgs e)
         {
-            MirthVM = new MirthRestApiVM(rblistMirthEnvs.SelectedValue);
+            MirthRestApiVM vm = new MirthRestApiVM(rblistMirthEnvs.SelectedValue);
 
-            if (MirthVM.Login(tbMirthUsername.Text, tbMirthPassword.Text, out string statusMsg))
+            if (vm.Login(tbMirthUsername.Text, tbMirthPassword.Text, out string statusMsg))
             {
-                btnMirthLogin.Enabled = false;
-                btnMirthLogout.Enabled = true;
-                btnRefreshChannels.Enabled = true;
-                btnStopChannels.Enabled = true;
-                btnStartChannels.Enabled = true;
-                rblistMirthEnvs.Enabled = false;
+                MirthUserLoggedIn();
+
+                Session[SessionKey_EpicMaint_Mirth_VM] = vm;
+                Session[SessionKey_EpicMaint_Mirth_LoggedInUser] = tbMirthUsername.Text;
             }
 
             lblStatusMsg.Text = statusMsg;
@@ -95,16 +128,15 @@ namespace org.ochin.interoperability.OCHINInterfaceUtilities
 
         protected void btnMirthLogout_Click(object sender, EventArgs e)
         {
-            if (MirthVM != null)
+            MirthRestApiVM vm = (MirthRestApiVM)Session[SessionKey_EpicMaint_Mirth_VM];
+            if (vm != null)
             {
-                if (MirthVM.Logout(out string statusMsg))
+                if (vm.Logout(out string statusMsg))
                 {
-                    btnMirthLogin.Enabled = true;
-                    btnMirthLogout.Enabled = false;
-                    btnRefreshChannels.Enabled = false;
-                    btnStopChannels.Enabled = false;
-                    btnStartChannels.Enabled = false;
-                    rblistMirthEnvs.Enabled = true;
+                    MirthUserLoggedOut();
+
+                    Session[SessionKey_EpicMaint_Mirth_VM] = null;
+                    Session[SessionKey_EpicMaint_Mirth_LoggedInUser] = null;
                 }
 
                 lblStatusMsg.Text = statusMsg;
@@ -113,9 +145,10 @@ namespace org.ochin.interoperability.OCHINInterfaceUtilities
 
         protected void btnRefreshChannels_Click(object sender, EventArgs e)
         {
-            if (MirthVM != null)
+            MirthRestApiVM vm = (MirthRestApiVM)Session[SessionKey_EpicMaint_Mirth_VM];
+            if (vm != null)
             {
-                XmlDocument doc = MirthVM.GetChannelStatuses(false);
+                XmlDocument doc = vm.GetChannelStatuses(false);
 
                 DataSet dsChannels = new DataSet();
                 using (XmlReader xr = new XmlNodeReader(doc.DocumentElement))
@@ -162,7 +195,8 @@ namespace org.ochin.interoperability.OCHINInterfaceUtilities
 
         protected void btnStopChannels_Click(object sender, EventArgs e)
         {
-            if (MirthVM != null)
+            MirthRestApiVM vm = (MirthRestApiVM)Session[SessionKey_EpicMaint_Mirth_VM];
+            if (vm != null)
             {
                 List<string> channelIds = new List<string>();
                 foreach (GridViewRow row in gridChannels.Rows)
@@ -176,7 +210,7 @@ namespace org.ochin.interoperability.OCHINInterfaceUtilities
 
                 if (channelIds.Count > 0)
                 {
-                    if (MirthVM.StopChannels(channelIds, true, out string statusMsg))
+                    if (vm.StopChannels(channelIds, true, out string statusMsg))
                     {
                         statusMsg = "Channels stop SUCCESSFUL";
                     }
@@ -190,7 +224,8 @@ namespace org.ochin.interoperability.OCHINInterfaceUtilities
 
         protected void btnStartChannels_Click(object sender, EventArgs e)
         {
-            if (MirthVM != null)
+            MirthRestApiVM vm = (MirthRestApiVM)Session[SessionKey_EpicMaint_Mirth_VM];
+            if (vm != null)
             {
                 List<string> channelIds = new List<string>();
                 foreach (GridViewRow row in gridChannels.Rows)
@@ -204,7 +239,7 @@ namespace org.ochin.interoperability.OCHINInterfaceUtilities
 
                 if (channelIds.Count > 0)
                 {
-                    if (MirthVM.StartChannels(channelIds, true, out string statusMsg))
+                    if (vm.StartChannels(channelIds, true, out string statusMsg))
                     {
                         statusMsg = "Channels start SUCCESSFUL";
                     }
@@ -253,16 +288,15 @@ namespace org.ochin.interoperability.OCHINInterfaceUtilities
                 port = int.Parse(ipPort[1]);
             }
 
-            PentraVM = new PentraVM(tbPentraUsername.Text, tbPentraPassword.Text, remoteHost, port);
+            PentraVM vm = new PentraVM(tbPentraUsername.Text, tbPentraPassword.Text, remoteHost, port);
 
             string statusMsg = string.Empty;
-            if ((PentraVM != null) && (PentraVM.Connect(out statusMsg)))
+            if ((vm != null) && (vm.Connect(out statusMsg)))
             {
-                btnPentraLogin.Enabled = false;
-                btnPentraLogout.Enabled = true;
-                btnRefreshPentraGatewayLogs.Enabled = true;
-                btnStartPentra.Enabled = true;
-                btnStopPentra.Enabled = true;
+                PentraUserLoggedIn();
+
+                Session[SessionKey_EpicMaint_Pentra_VM] = vm;
+                Session[SessionKey_EpicMaint_Pentra_LoggedInUser] = tbPentraUsername.Text;
             }
 
             lblStatusMsg.Text = statusMsg;
@@ -270,15 +304,15 @@ namespace org.ochin.interoperability.OCHINInterfaceUtilities
 
         protected void btnPentraLogout_Click(object sender, EventArgs e)
         {
-            if (PentraVM != null)
+            PentraVM vm = (PentraVM)Session[SessionKey_EpicMaint_Pentra_VM];
+            if (vm != null)
             {
-                if (PentraVM.Disconnect(out string statusMsg))
+                if (vm.Disconnect(out string statusMsg))
                 {
-                    btnPentraLogin.Enabled = true;
-                    btnPentraLogout.Enabled = false;
-                    btnRefreshPentraGatewayLogs.Enabled = false;
-                    btnStartPentra.Enabled = false;
-                    btnStopPentra.Enabled = false;
+                    PentraUserLoggedOut();
+
+                    Session[SessionKey_EpicMaint_Pentra_VM] = null;
+                    Session[SessionKey_EpicMaint_Pentra_LoggedInUser] = null;
                 }
 
                 lblStatusMsg.Text = statusMsg;
@@ -287,11 +321,12 @@ namespace org.ochin.interoperability.OCHINInterfaceUtilities
 
         protected void btnRefreshPentraGatewayLogs_Click(object sender, EventArgs e)
         {
-            if (PentraVM != null)
+            PentraVM vm = (PentraVM)Session[SessionKey_EpicMaint_Pentra_VM];
+            if (vm != null)
             {
                 int lines = int.Parse(tbPentraGatewayLogLines.Text);
 
-                _ = PentraVM.TailGatewayLogs(lines, out string result, out string cmdExecuted);
+                _ = vm.TailGatewayLogs(lines, out string result, out string cmdExecuted);
                 tbPentraGatewayLog.Text = result;
                 lblPentraCmd.Text = cmdExecuted;
             }
@@ -299,9 +334,10 @@ namespace org.ochin.interoperability.OCHINInterfaceUtilities
 
         protected void btnStopPentra_Click(object sender, EventArgs e)
         {
-            if (PentraVM != null)
+            PentraVM vm = (PentraVM)Session[SessionKey_EpicMaint_Pentra_VM];
+            if (vm != null)
             {
-                PentraVM.StopGateway(out string result, out string cmdExecuted);
+                vm.StopGateway(out string result, out string cmdExecuted);
 
                 lblStatusMsg.Text = result;
                 lblPentraCmd.Text = cmdExecuted;
@@ -310,13 +346,52 @@ namespace org.ochin.interoperability.OCHINInterfaceUtilities
 
         protected void btnStartPentra_Click(object sender, EventArgs e)
         {
-            if (PentraVM != null)
+            PentraVM vm = (PentraVM)Session[SessionKey_EpicMaint_Pentra_VM];
+            if (vm != null)
             {
-                PentraVM.StartGateway(out string result, out string cmdExecuted);
+                vm.StartGateway(out string result, out string cmdExecuted);
 
                 lblStatusMsg.Text = result;
                 lblPentraCmd.Text = cmdExecuted;
             }
+        }
+
+        private void MirthUserLoggedIn()
+        {
+            btnMirthLogin.Enabled = false;
+            btnMirthLogout.Enabled = true;
+            btnRefreshChannels.Enabled = true;
+            btnStopChannels.Enabled = true;
+            btnStartChannels.Enabled = true;
+            rblistMirthEnvs.Enabled = false;
+        }
+
+        private void MirthUserLoggedOut()
+        {
+            btnMirthLogin.Enabled = true;
+            btnMirthLogout.Enabled = false;
+            btnRefreshChannels.Enabled = false;
+            btnStopChannels.Enabled = false;
+            btnStartChannels.Enabled = false;
+            rblistMirthEnvs.Enabled = true;
+        }
+
+        private void PentraUserLoggedIn()
+        {
+            btnPentraLogin.Enabled = false;
+            btnPentraLogout.Enabled = true;
+            btnRefreshPentraGatewayLogs.Enabled = true;
+            btnStartPentra.Enabled = true;
+            btnStopPentra.Enabled = true;
+        }
+
+        private void PentraUserLoggedOut()
+        {
+            btnPentraLogin.Enabled = true;
+            btnPentraLogout.Enabled = false;
+            btnRefreshPentraGatewayLogs.Enabled = false;
+            btnStartPentra.Enabled = false;
+            btnStopPentra.Enabled = false;
         }
     }
 }
