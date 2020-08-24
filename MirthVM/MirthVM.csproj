@@ -42,6 +42,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="MirthChannel.cs" />
+    <Compile Include="MirthChannelTag.cs" />
     <Compile Include="MirthRestApiVM.cs" />
     <Compile Include="MirthSSHVM.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

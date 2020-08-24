@@ -64,15 +64,15 @@ namespace org.ochin.interoperability.OCHINInterfaceUtilities
             foreach (string key in ConfigurationManager.AppSettings.AllKeys)
             {
                 string[] k = key.Split('|');
-                if ((k.Length > 2) && (k[0].ToUpper() == "EPICMAINT"))
+                if ((k.Length > 1) && ((k[0].ToUpper() == "MIRTH") || (k[0].ToUpper() == "PENTRA")))
                 {
-                    switch (k[1].ToUpper())
+                    switch (k[0].ToUpper())
                     {
                         case "MIRTH":
-                            mirthServers.Add(k[2], ConfigurationManager.AppSettings[key]);
+                            mirthServers.Add(k[1], ConfigurationManager.AppSettings[key]);
                             break;
                         case "PENTRA":
-                            pentraServers.Add(k[2], ConfigurationManager.AppSettings[key]);
+                            pentraServers.Add(k[1], ConfigurationManager.AppSettings[key]);
                             break;
                         default:
                             break;

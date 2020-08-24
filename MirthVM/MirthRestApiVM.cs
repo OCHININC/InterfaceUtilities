@@ -56,13 +56,53 @@ namespace org.ochin.interoperability.OCHINInterfaceUtilities.Mirth
         public XmlDocument GetChannelStatuses(bool includeUndeployed)
         {
             XmlDocument doc = new XmlDocument();
-            var servers = doc.CreateElement("servers");
+            XmlElement servers = doc.CreateElement("servers");
 
             foreach (MirthServer server in MirthServers)
             {
                 if (server.GetChannelStatuses(includeUndeployed))
                 {
-                    var imported = doc.ImportNode(server.ToXml().DocumentElement, true);
+                    XmlNode imported = doc.ImportNode(server.ToXml().DocumentElement, true);
+                    servers.AppendChild(imported);
+                }
+            }
+
+            doc.AppendChild(servers);
+
+            return doc;
+        }
+
+        public XmlDocument GetChannelTags()
+        {
+            XmlDocument doc = new XmlDocument();
+            XmlElement servers = doc.CreateElement("servers");
+
+            // Loop through all the servers
+            foreach (MirthServer server in MirthServers)
+            {
+                if (server.GetChannelStatuses(true) && server.GetServerChannelTags())
+                {
+                    XmlDocument serverDoc = server.ToXml();
+
+                    // Loop through all the channels in the server
+                    foreach (XmlNode channel in serverDoc.SelectNodes("/server/channels/channel"))
+                    {
+                        string id = channel.SelectSingleNode("id")?.InnerText;
+
+                        // Find all the tags that are associated to this channel
+                        List<string> tagNames = new List<string>();
+                        foreach (var channelTag in server.ChannelTags.Where(ct => ct.channelIds.Contains(id)))
+                        {
+                            tagNames.Add(channelTag.name);
+                        }
+
+                        // Add the tag names to the channel
+                        XmlElement tags = serverDoc.CreateElement("tags");
+                        tags.InnerText = string.Join(", ", tagNames);
+                        channel.AppendChild(tags);
+                    }
+
+                    XmlNode imported = doc.ImportNode(serverDoc.DocumentElement, true);
                     servers.AppendChild(imported);
                 }
             }

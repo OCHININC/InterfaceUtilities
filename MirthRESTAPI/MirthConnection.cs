@@ -110,6 +110,11 @@ namespace org.ochin.interoperability.OCHINInterfaceUtilities.Mirth
             return HttpGet("channels?pollingOnly=" + pollingOnly, out channels);
         }
 
+        public bool GetServerChannelTags(out string tags)
+        {
+            return HttpGet("server/channelTags", out tags);
+        }
+
         public bool StopChannels(List<string> channelIds, bool returnErrors, out string statusMsg)
         {
             List<KeyValuePair<string, string>> c = new List<KeyValuePair<string, string>>();

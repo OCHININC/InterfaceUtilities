@@ -1,15 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml;
+using System.Xml.Serialization;
 
 namespace org.ochin.interoperability.OCHINInterfaceUtilities.Mirth
 {
     public class MirthServer
     {
         public List<MirthChannel> Channels { get; private set; }
+        public List<MirthChannelTag> ChannelTags { get; private set; }
 
         public MirthConnection MirthConnection { get; private set; }
 
@@ -18,6 +21,7 @@ namespace org.ochin.interoperability.OCHINInterfaceUtilities.Mirth
         public MirthServer(string url)
         {
             Channels = new List<MirthChannel>();
+            ChannelTags = new List<MirthChannelTag>();
 
             Alias = url;
             InitConnection(url);
@@ -33,7 +37,7 @@ namespace org.ochin.interoperability.OCHINInterfaceUtilities.Mirth
             MirthConnection = new MirthConnection(baseUrl);
         }
 
-        public void Parse(string xml)
+        private void ParseChannels(string xml)
         {
             XmlDocument doc = new XmlDocument();
             doc.LoadXml(xml);
@@ -44,6 +48,22 @@ namespace org.ochin.interoperability.OCHINInterfaceUtilities.Mirth
             {
                 MirthChannel c = new MirthChannel(channel.OuterXml, Alias);
                 Channels.Add(c);
+            }
+        }
+
+        private void ParseChannelTags(string xml)
+        {
+            XmlDocument doc = new XmlDocument();
+            doc.LoadXml(xml);
+
+            ChannelTags.Clear();
+
+            foreach (XmlNode channel in doc.SelectNodes("/set/channelTag"))
+            {
+                XmlSerializer xs = new XmlSerializer(typeof(MirthChannelTag));
+                MirthChannelTag ct = (MirthChannelTag)xs.Deserialize(new XmlNodeReader(channel));
+                ct.server = Alias;
+                ChannelTags.Add(ct);
             }
         }
 
@@ -62,7 +82,17 @@ namespace org.ochin.interoperability.OCHINInterfaceUtilities.Mirth
             bool res = MirthConnection.GetChannelsStatuses(includeUndeployed, out string statuses);
             if (res)
             {
-                Parse(statuses);
+                ParseChannels(statuses);
+            }
+            return res;
+        }
+
+        public bool GetServerChannelTags()
+        {
+            bool res = MirthConnection.GetServerChannelTags(out string tags);
+            if (res)
+            {
+                ParseChannelTags(tags);
             }
             return res;
         }
@@ -95,6 +125,28 @@ namespace org.ochin.interoperability.OCHINInterfaceUtilities.Mirth
             }
 
             server.AppendChild(channels);
+
+            var channelTags = doc.CreateElement("channelTags");
+
+            foreach (var channelTag in ChannelTags)
+            {
+                XmlSerializer xs = new XmlSerializer(typeof(MirthChannelTag));
+                using (StringWriter sw = new StringWriter())
+                {
+                    var xns = new XmlSerializerNamespaces();
+                    xns.Add(string.Empty, string.Empty);
+
+                    xs.Serialize(sw, channelTag, xns);
+
+                    XmlDocument xd = new XmlDocument();
+                    xd.LoadXml(sw.ToString());
+                    var imported = doc.ImportNode(xd.DocumentElement, true);
+
+                    channelTags.AppendChild(imported);
+                }
+            }
+
+            server.AppendChild(channelTags);
 
             doc.AppendChild(server);
 
