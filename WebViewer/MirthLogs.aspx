@@ -3,9 +3,6 @@
     <div class="row col-md-12">
         <a href="https://wiki.ochin.org/display/INTM/How+to+pull+HL7+messages+from+the+Mirth+archive" target="_blank">WIKI - How to pull HL7 messages from the Mirth archive</a>
     </div>
-    <div class="row col-md-12">
-        <asp:Label ID="lblStatusMsg" runat="server" Text=""></asp:Label>
-    </div>
     <div class="row">
         <div class="card col-md-4">
             <div class="card-header">Credentials</div>
@@ -18,9 +15,12 @@
                     <asp:Label runat="server" Text="Password: "></asp:Label>
                     <asp:TextBox ID="tbPassword" runat="server" TextMode="Password"></asp:TextBox>
                 </div>
-                <div>
+                <div class="py-md-1">
                     <asp:Button CssClass="btn btn-dark" Text="Login" runat="server" ID="btnLogin" OnClick="btnLogin_Click" />
                     <asp:Button CssClass="btn btn-dark" Text="Logout" runat="server" ID="btnLogout" OnClick="btnLogout_Click" Enabled="false" />
+                </div>
+                <div class="py-md-1">
+                    <asp:Label ID="lblStatusMsg" runat="server" Text="" ForeColor="Red"></asp:Label>
                 </div>
             </div>
         </div>

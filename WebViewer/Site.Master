@@ -16,7 +16,7 @@
     <link href="~/favicon.ico" rel="shortcut icon" type="image/x-icon" />
 
 </head>
-<body>
+<body onbeforeunload="doHourglass();" onunload="doHourglass();">
     <script>
         $(document).ready(function () {
             $(".mr-auto .nav-item").bind("click", function (event) {
@@ -28,6 +28,10 @@
                 clickedItem.addClass("active");
             });
         });
+
+        function doHourglass() {
+            document.body.style.cursor = 'wait';
+        }
     </script>
     <form runat="server">
         <asp:ScriptManager runat="server">

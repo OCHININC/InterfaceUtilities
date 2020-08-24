@@ -95,7 +95,6 @@ namespace org.ochin.interoperability.OCHINInterfaceUtilities
 
             if (EpicICVM != null)
             {
-
                 bool ret = EpicICVM.GetLabAccts(out List<string> labAccts, out string response);
                 ViewState[ViewStateKey_EpicInfo_LabAccts] = labAccts;
 
@@ -179,9 +178,16 @@ namespace org.ochin.interoperability.OCHINInterfaceUtilities
 
         protected void lbtnDownloadLabAccts_Click(object sender, EventArgs e)
         {
-            if (ViewState[ViewStateKey_EpicInfo_LabAccts] != null)
+            string filename = "LabAccts.csv";
+
+            if (!string.IsNullOrEmpty(hfLabAccts.Value))
             {
-                DownloadListAsCsv((List<string>)ViewState[ViewStateKey_EpicInfo_LabAccts], "LabAccts.csv");
+                DownloadAsCsv(hfLabAccts.Value, filename);
+            }
+
+            else if (ViewState[ViewStateKey_EpicInfo_LabAccts] != null)
+            {
+                DownloadListAsCsv((List<string>)ViewState[ViewStateKey_EpicInfo_LabAccts], filename);
             }
         }
 
@@ -189,21 +195,26 @@ namespace org.ochin.interoperability.OCHINInterfaceUtilities
         {
             if (list.Count > 0)
             {
-                Response.Clear();
-                Response.ContentType = "application/octet-stream";
-                Response.AddHeader("Content-Disposition", $"attachment; filename={filename}");
-
                 StringBuilder sb = new StringBuilder(list.Count);
                 foreach (string l in list)
                 {
                     sb.AppendLine(l.Replace('^', ','));
                 }
 
-                byte[] bytes = Encoding.Default.GetBytes(sb.ToString());
-                Response.OutputStream.Write(bytes, 0, bytes.Length);
-
-                Response.End();
+                DownloadAsCsv(sb.ToString(), filename);
             }
+        }
+
+        private void DownloadAsCsv(string content, string filename)
+        {
+            Response.Clear();
+            Response.ContentType = "application/octet-stream";
+            Response.AddHeader("Content-Disposition", $"attachment; filename={filename}");
+
+            byte[] bytes = Encoding.Default.GetBytes(content);
+            Response.OutputStream.Write(bytes, 0, bytes.Length);
+
+            Response.End();
         }
     }
 }

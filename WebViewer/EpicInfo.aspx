@@ -34,7 +34,7 @@
         <div class="card-body">
             <div class="py-1">
                 <asp:Button CssClass="btn btn-outline-info" ID="btnGetLabAccts" runat="server" Text="Get Lab Accounts" OnClick="btnGetLabAccts_Click" />
-                <asp:LinkButton CssClass="pl-2" ID="lbtnDownloadLabAccts" runat="server" Text="Download Lab Accounts as CSV" OnClick="lbtnDownloadLabAccts_Click" />
+                <asp:LinkButton CssClass="pl-2" ID="lbtnDownloadLabAccts" runat="server" Text="Download Lab Accounts as CSV" OnClick="lbtnDownloadLabAccts_Click" OnClientClick="listDisplayedLabAccts();" />
             </div>
             <div class="py-1">
                 <input type="text" placeholder="DEP" id="tbFilterTblLabAcctsDep" />
@@ -47,6 +47,7 @@
             </div>
             <div class="py-1 pre-scrollable">
                 <asp:Table ID="tblLabAccts" runat="server" GridLines="Both" CssClass="table-dark"></asp:Table>
+                <asp:HiddenField ID="hfLabAccts" runat="server" />
             </div>
             <script>
                 //var input = document.getElementById("btnFilterLabAccts");
@@ -101,6 +102,38 @@
                     }
 
                     return false;
+                }
+
+                function listDisplayedLabAccts() {
+                    var text = "";
+
+                    // Loop through Lab Accounts table to gather all displayed rows
+                    var table, tr, td, i, j;
+
+                    table = document.getElementById("MainContent_tblLabAccts");
+                    tr = table.getElementsByTagName("tr");
+
+                    // Loop through all table rows (including header row)
+                    for (i = 0; i < tr.length; i++) {
+                        if (tr[i].style.display == "") {
+                            if (i > 0) {
+                                td = tr[i].getElementsByTagName("td");
+                            } else {
+                                td = tr[i].getElementsByTagName("th");
+                            }
+
+                            for (j = 0; j < td.length; j++) {
+                                text += td[j].innerText + ",";
+                            }
+
+                            if (text.endsWith(",")) {
+                                text = text.slice(0, text.length - 1);
+                                text += "\r\n";
+                            }
+                        }
+                    }
+
+                    document.getElementById("MainContent_hfLabAccts").value = text;
                 }
             </script>
         </div>
