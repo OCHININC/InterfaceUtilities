@@ -33,10 +33,6 @@
         <div class="card-header">Lab Accounts (AIF-500000)</div>
         <div class="card-body">
             <div class="py-1">
-                <asp:Button CssClass="btn btn-outline-info" ID="btnGetLabAccts" runat="server" Text="Get Lab Accounts" OnClick="btnGetLabAccts_Click" />
-                <asp:LinkButton CssClass="pl-2" ID="lbtnDownloadLabAccts" runat="server" Text="Download Lab Accounts as CSV" OnClick="lbtnDownloadLabAccts_Click" OnClientClick="listDisplayedLabAccts();" />
-            </div>
-            <div class="py-1">
                 <input type="text" placeholder="DEP" id="tbFilterTblLabAcctsDep" />
                 <input type="text" placeholder="SA" id="tbFilterTblLabAcctsSa" />
                 <input type="text" placeholder="TYPE" id="tbFilterTblLabAcctsType" />
@@ -48,6 +44,10 @@
             <div class="py-1 pre-scrollable">
                 <asp:Table ID="tblLabAccts" runat="server" GridLines="Both" CssClass="table-dark"></asp:Table>
                 <asp:HiddenField ID="hfLabAccts" runat="server" />
+            </div>
+            <div class="py-1">
+                <asp:Button CssClass="btn btn-outline-info" ID="btnGetLabAccts" runat="server" Text="Get Lab Accounts" OnClick="btnGetLabAccts_Click" />
+                <asp:LinkButton CssClass="pl-2" ID="lbtnDownloadLabAccts" runat="server" Text="Download Lab Accounts as CSV" OnClick="lbtnDownloadLabAccts_Click" OnClientClick="listDisplayedLabAccts();" />
             </div>
             <script>
                 //var input = document.getElementById("btnFilterLabAccts");

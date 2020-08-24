@@ -78,24 +78,6 @@ namespace org.ochin.interoperability.OCHINInterfaceUtilities
         protected global::System.Web.UI.WebControls.Table tblDepList;
 
         /// <summary>
-        /// btnGetLabAccts control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Button btnGetLabAccts;
-
-        /// <summary>
-        /// lbtnDownloadLabAccts control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.LinkButton lbtnDownloadLabAccts;
-
-        /// <summary>
         /// btnFilterLabAccts control.
         /// </summary>
         /// <remarks>
@@ -121,5 +103,23 @@ namespace org.ochin.interoperability.OCHINInterfaceUtilities
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.HiddenField hfLabAccts;
+
+        /// <summary>
+        /// btnGetLabAccts control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button btnGetLabAccts;
+
+        /// <summary>
+        /// lbtnDownloadLabAccts control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.LinkButton lbtnDownloadLabAccts;
     }
 }

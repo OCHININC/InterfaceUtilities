@@ -98,7 +98,7 @@ namespace org.ochin.interoperability.OCHINInterfaceUtilities.Mirth
 
                         // Add the tag names to the channel
                         XmlElement tags = serverDoc.CreateElement("tags");
-                        tags.InnerText = string.Join(", ", tagNames);
+                        tags.InnerText = string.Join(" | ", tagNames);
                         channel.AppendChild(tags);
                     }
 
