@@ -11,31 +11,17 @@ namespace org.ochin.interoperability.OCHINInterfaceUtilities.Mirth
     {
         public string ChannelId { get; private set; }
         public string Name { get; private set; }
-        public string State { get; private set; }
+        public string State { get; set; }
         public string Server { get; private set; }
+        public string Description { get; set; }
 
-        public MirthChannel(string id, string name, string state, string server)
+        public MirthChannel(string id, string name, string server, string state = "", string description = "")
         {
             ChannelId = id;
             Name = name;
             State = state;
             Server = server;
-        }
-
-        public MirthChannel(string xml, string server)
-        {
-            Server = server;
-            Parse(xml);
-        }
-
-        public void Parse(string xml)
-        {
-            XmlDocument doc = new XmlDocument();
-            doc.LoadXml(xml);
-
-            ChannelId = doc.SelectSingleNode("/dashboardStatus/channelId")?.InnerText;
-            Name = doc.SelectSingleNode("/dashboardStatus/name")?.InnerText;
-            State = doc.SelectSingleNode("/dashboardStatus/state")?.InnerText;
+            Description = description;
         }
 
         public XmlDocument ToXml()
@@ -58,6 +44,10 @@ namespace org.ochin.interoperability.OCHINInterfaceUtilities.Mirth
             var server = doc.CreateElement("server");
             server.InnerText = Server;
             channel.AppendChild(server);
+
+            var description = doc.CreateElement("description");
+            description.InnerText = Description;
+            channel.AppendChild(description);
 
             doc.AppendChild(channel);
 

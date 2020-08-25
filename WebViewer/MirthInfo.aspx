@@ -128,7 +128,7 @@
                                 <asp:BoundField DataField="tags" HeaderText="Tags" />
                                 <asp:BoundField DataField="server" HeaderText="Server"></asp:BoundField>
                                 <asp:BoundField DataField="state" HeaderText="State"></asp:BoundField>
-                                <asp:BoundField DataField="id" HeaderText="ID"></asp:BoundField>
+                                <asp:BoundField DataField="description" HeaderText="Description"></asp:BoundField>
                             </Columns>
                         </asp:GridView>
                     </div>
@@ -136,6 +136,9 @@
                         <asp:Button CssClass="btn btn-outline-info" ID="btnGetMirthInventory" runat="server" Text="Get Mirth Inventory" OnClick="btnGetMirthInventory_Click" />
                         <asp:LinkButton CssClass="pl-2" ID="lbtnDownloadMirthInventory" runat="server" Text="Download Mirth Inventory as CSV" OnClick="lbtnDownloadMirthInventory_Click" OnClientClick="listDisplayedMirthInventory();" />
                         <asp:HiddenField ID="hfMirthInventory" runat="server" />
+                    </div>
+                    <div class="my-1">
+                        <asp:CheckBox ID="cbIncludeDesc" Text="Include Description (may be slow)" Checked ="false" runat="server" Enabled="False" />
                     </div>
                 </div>
             </div>

@@ -72,7 +72,7 @@ namespace org.ochin.interoperability.OCHINInterfaceUtilities.Mirth
             return doc;
         }
 
-        public XmlDocument GetChannelTags()
+        public XmlDocument GetChannelTags(bool includeDesc)
         {
             XmlDocument doc = new XmlDocument();
             XmlElement servers = doc.CreateElement("servers");
@@ -80,7 +80,7 @@ namespace org.ochin.interoperability.OCHINInterfaceUtilities.Mirth
             // Loop through all the servers
             foreach (MirthServer server in MirthServers)
             {
-                if (server.GetChannelStatuses(true) && server.GetServerChannelTags())
+                if (server.GetChannelStatuses(true) && server.GetServerChannelTags() && (!includeDesc || server.GetChannels(false)))
                 {
                     XmlDocument serverDoc = server.ToXml();
 

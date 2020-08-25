@@ -110,7 +110,7 @@ namespace org.ochin.interoperability.OCHINInterfaceUtilities
             MirthRestApiVM vm = (MirthRestApiVM)Session[SessionKey_MirthInfo_Mirth_VM];
             if (vm != null)
             {
-                XmlDocument doc = vm.GetChannelTags();
+                XmlDocument doc = vm.GetChannelTags(cbIncludeDesc.Checked);
 
                 DataSet dsChannels = new DataSet();
                 using (XmlReader xr = new XmlNodeReader(doc.DocumentElement))
@@ -144,6 +144,7 @@ namespace org.ochin.interoperability.OCHINInterfaceUtilities
             btnMirthLogout.Enabled = true;
             btnGetMirthInventory.Enabled = true;
             rblistMirthEnvs.Enabled = false;
+            cbIncludeDesc.Enabled = true;
         }
 
         private void MirthUserLoggedOut()
@@ -152,6 +153,7 @@ namespace org.ochin.interoperability.OCHINInterfaceUtilities
             btnMirthLogout.Enabled = false;
             btnGetMirthInventory.Enabled = false;
             rblistMirthEnvs.Enabled = true;
+            cbIncludeDesc.Enabled = false;
         }
     }
 }

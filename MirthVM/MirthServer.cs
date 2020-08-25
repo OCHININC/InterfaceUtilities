@@ -11,7 +11,8 @@ namespace org.ochin.interoperability.OCHINInterfaceUtilities.Mirth
 {
     public class MirthServer
     {
-        public List<MirthChannel> Channels { get; private set; }
+        // Using a Dictionary for "indexing" purposes
+        public Dictionary<string, MirthChannel> Channels { get; private set; }
         public List<MirthChannelTag> ChannelTags { get; private set; }
 
         public MirthConnection MirthConnection { get; private set; }
@@ -20,7 +21,7 @@ namespace org.ochin.interoperability.OCHINInterfaceUtilities.Mirth
 
         public MirthServer(string url)
         {
-            Channels = new List<MirthChannel>();
+            Channels = new Dictionary<string, MirthChannel>();
             ChannelTags = new List<MirthChannelTag>();
 
             Alias = url;
@@ -42,12 +43,44 @@ namespace org.ochin.interoperability.OCHINInterfaceUtilities.Mirth
             XmlDocument doc = new XmlDocument();
             doc.LoadXml(xml);
 
-            Channels.Clear();
+            foreach (XmlNode channel in doc.SelectNodes("/list/channel"))
+            {
+                string id = channel.SelectSingleNode("descendant::id")?.InnerText;
+                string name = channel.SelectSingleNode("descendant::name")?.InnerText;
+                string description = channel.SelectSingleNode("descendant::description")?.InnerText;
+
+                if (Channels.ContainsKey(id))
+                {
+                    Channels[id].Description = description;
+                }
+                else
+                {
+                    MirthChannel c = new MirthChannel(id, name, Alias, string.Empty, description);
+                    Channels.Add(c.ChannelId, c);
+                }
+            }
+        }
+
+        private void ParseChannelStatuses(string xml)
+        {
+            XmlDocument doc = new XmlDocument();
+            doc.LoadXml(xml);
 
             foreach (XmlNode channel in doc.SelectNodes("/list/dashboardStatus[statusType='CHANNEL']"))
             {
-                MirthChannel c = new MirthChannel(channel.OuterXml, Alias);
-                Channels.Add(c);
+                string id = channel.SelectSingleNode("descendant::channelId")?.InnerText;
+                string name = channel.SelectSingleNode("descendant::name")?.InnerText;
+                string state = channel.SelectSingleNode("descendant::state")?.InnerText;
+
+                if (Channels.ContainsKey(id))
+                {
+                    Channels[id].State = state;
+                }
+                else
+                {
+                    MirthChannel c = new MirthChannel(id, name, Alias, state);
+                    Channels.Add(c.ChannelId, c);
+                }
             }
         }
 
@@ -77,12 +110,22 @@ namespace org.ochin.interoperability.OCHINInterfaceUtilities.Mirth
             return MirthConnection.Logout(out statusMsg);
         }
 
+        public bool GetChannels(bool pollingOnly)
+        {
+            bool res = MirthConnection.GetChannels(pollingOnly, out string channels);
+            if (res)
+            {
+                ParseChannels(channels);
+            }
+            return res;
+        }
+
         public bool GetChannelStatuses(bool includeUndeployed)
         {
             bool res = MirthConnection.GetChannelsStatuses(includeUndeployed, out string statuses);
             if (res)
             {
-                ParseChannels(statuses);
+                ParseChannelStatuses(statuses);
             }
             return res;
         }
@@ -120,7 +163,7 @@ namespace org.ochin.interoperability.OCHINInterfaceUtilities.Mirth
 
             foreach (var channel in Channels)
             {
-                var imported = doc.ImportNode(channel.ToXml().DocumentElement, true);
+                var imported = doc.ImportNode(channel.Value.ToXml().DocumentElement, true);
                 channels.AppendChild(imported);
             }
 
@@ -158,9 +201,9 @@ namespace org.ochin.interoperability.OCHINInterfaceUtilities.Mirth
             StringBuilder server = new StringBuilder();
             server.AppendLine("Server: " + Alias);
 
-            foreach (MirthChannel channel in Channels)
+            foreach (var channel in Channels)
             {
-                server.AppendLine(channel.ToString());
+                server.AppendLine(channel.Value.ToString());
             }
 
             return server.ToString();
