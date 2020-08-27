@@ -11,7 +11,7 @@ namespace org.ochin.interoperability.OCHINInterfaceUtilities
 {
 
 
-    public partial class MirthInfo
+    public partial class MirthInventory
     {
 
         /// <summary>

@@ -1,4 +1,4 @@
-﻿<%@ Page Title="Epic Maintentance" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="MirthInfo.aspx.cs" Inherits="org.ochin.interoperability.OCHINInterfaceUtilities.MirthInfo" %>
+﻿<%@ Page Title="Mirth Inventory" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="MirthInventory.aspx.cs" Inherits="org.ochin.interoperability.OCHINInterfaceUtilities.MirthInventory" %>
 
 <asp:Content ID="BodyContent" ContentPlaceHolderID="MainContent" runat="server">
     <script>

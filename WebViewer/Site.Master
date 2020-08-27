@@ -54,7 +54,7 @@
             </Scripts>
         </asp:ScriptManager>
 
-        <div class="navbar navbar-dark bg-dark navbar-expand-sm">
+        <div class="navbar navbar-dark bg-dark navbar-expand-sm sticky-top">
             <div class="container-fluid">
                 <div>
                     <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#navbarPages">
@@ -64,20 +64,19 @@
                 </div>
                 <div class="navbar-collapse collapse" id="navbarPages">
                     <ul class="navbar-nav mr-auto">
-                        <li class="nav-item">
-                            <a class="nav-link" runat="server" href="~/">Home</a>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown">Epic</a>
+                            <div class="dropdown-menu">
+                                <a class="dropdown-item" href="EpicInfo">Info</a>
+                                <a class="dropdown-item" href="EpicMaintenance">Maintenance</a>
+                            </div>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link" runat="server" href="~/EpicMaintenance">Epic Maintenance</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" runat="server" href="~/MirthLogs">Mirth Logs</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" runat="server" href="~/EpicInfo">Epic Info</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" runat="server" href="~/MirthInfo">Mirth Info</a>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown">Mirth</a>
+                            <div class="dropdown-menu">
+                                <a class="dropdown-item" href="MirthInventory">Inventory</a>
+                                <a class="dropdown-item" href="MirthLogs">Log Search</a>
+                            </div>
                         </li>
                     </ul>
                 </div>

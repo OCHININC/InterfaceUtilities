@@ -11,7 +11,7 @@ using System.Xml;
 
 namespace org.ochin.interoperability.OCHINInterfaceUtilities
 {
-    public partial class MirthInfo : Page
+    public partial class MirthInventory : Page
     {
         private static readonly string SessionKey_MirthInfo_Mirth_LoggedInUser = "MirthInfo_Mirth_LoggedInUser";
         private static readonly string SessionKey_MirthInfo_Mirth_Servers = "MirthInfo_Mirth_Servers";
