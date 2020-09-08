@@ -50,5 +50,14 @@ namespace org.ochin.interoperability.OCHINInterfaceUtilities.Epic
 
             return ret;
         }
+
+        public bool RebuildLabAccts(out string response)
+        {
+            string request = "/GeneralUtils/rebuildLabAccts";
+
+            bool ret = Get(request, out response);
+
+            return ret;
+        }
     }
 }

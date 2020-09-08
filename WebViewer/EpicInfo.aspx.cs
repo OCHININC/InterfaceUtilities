@@ -17,6 +17,8 @@ namespace org.ochin.interoperability.OCHINInterfaceUtilities
 
         protected void Page_Load(object sender, EventArgs e)
         {
+            ClearStatusMessages();
+
             if (Session[SessionKey_EpicInfo_EpicICServers] == null)
             {
                 ReadConfig();
@@ -67,6 +69,14 @@ namespace org.ochin.interoperability.OCHINInterfaceUtilities
             }
         }
 
+        private void ClearStatusMessages()
+        {
+            lblStatusMsgEnvs.Text = string.Empty;
+            lblStatusMsgDepList.Text = string.Empty;
+            lblStatusMsgGetLabAccts.Text = string.Empty;
+            lblStatusMsgRebuildLabAccts.Text = string.Empty;
+        }
+
         protected void btnGetDepList_Click(object sender, EventArgs e)
         {
             EpicInterConnectVM EpicICVM = GetSelectedEpicICEnv();
@@ -78,13 +88,13 @@ namespace org.ochin.interoperability.OCHINInterfaceUtilities
 
                 if (ret)
                 {
-                    lblStatusMsg.Text = string.Empty;
+                    lblStatusMsgDepList.Text = string.Empty;
 
                     ConvertDepListToTable();
                 }
                 else
                 {
-                    lblStatusMsg.Text = response;
+                    lblStatusMsgDepList.Text = response;
                 }
             }
         }
@@ -100,17 +110,36 @@ namespace org.ochin.interoperability.OCHINInterfaceUtilities
 
                 if (ret)
                 {
-                    lblStatusMsg.Text = string.Empty;
+                    lblStatusMsgGetLabAccts.Text = string.Empty;
 
                     ConvertLabAcctsListToTable();
                 }
                 else
                 {
-                    lblStatusMsg.Text = response;
+                    lblStatusMsgGetLabAccts.Text = response;
                 }
             }
         }
 
+        protected void btnRebuildLabAccts_Click(object sender, EventArgs e)
+        {
+            EpicInterConnectVM EpicICVM = GetSelectedEpicICEnv();
+
+            if (EpicICVM != null)
+            {
+                bool ret = EpicICVM.RebuildLabAccts(out string response);
+
+                if (ret)
+                {
+                    lblStatusMsgRebuildLabAccts.Text = "Lab accounts index rebuilt successfully!";
+                }
+                else
+                {
+                    lblStatusMsgRebuildLabAccts.Text = response;
+                }
+            }
+        }
+        
         private void ConvertDepListToTable()
         {
             var deps = (List<string>)ViewState[ViewStateKey_EpicInfo_Deps];
@@ -157,12 +186,12 @@ namespace org.ochin.interoperability.OCHINInterfaceUtilities
 
             if (!string.IsNullOrEmpty(selectedValue))
             {
-                lblStatusMsg.Text = string.Empty;
+                lblStatusMsgEnvs.Text = string.Empty;
                 return new EpicInterConnectVM(selectedValue);
             }
             else
             {
-                lblStatusMsg.Text = "Unrecognized Epic InterConnect environment: " + rblistEpicICEnvs.SelectedItem?.Text;
+                lblStatusMsgEnvs.Text = "Unrecognized Epic InterConnect environment: " + rblistEpicICEnvs.SelectedItem?.Text;
             }
 
             return null;

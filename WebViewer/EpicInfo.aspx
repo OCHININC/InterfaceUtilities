@@ -1,9 +1,6 @@
 ﻿<%@ Page Title="Epic Info" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="EpicInfo.aspx.cs" Inherits="org.ochin.interoperability.OCHINInterfaceUtilities.EpicInfo" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="MainContent" runat="server">
-    <div class="row col-md-12">
-        <asp:Label ID="lblStatusMsg" runat="server" Text=""></asp:Label>
-    </div>
     <div class="row">
         <div class="col-md-4">
             <div class="card my-2">
@@ -11,6 +8,7 @@
                 <div class="card-body">
                     <asp:RadioButtonList ID="rblistEpicICEnvs" runat="server" RepeatDirection="Horizontal" CellPadding="5">
                     </asp:RadioButtonList>
+                    <asp:Label ID="lblStatusMsgEnvs" runat="server" Text=""></asp:Label>
                 </div>
             </div>
         </div>
@@ -28,6 +26,7 @@
                         <asp:Button CssClass="btn btn-outline-info" ID="btnGetDepList" runat="server" Text="Get DEP List" OnClick="btnGetDepList_Click" />
                         <asp:LinkButton CssClass="pl-2" ID="lbtnDownloadDepList" runat="server" Text="Download DEP List as CSV" OnClick="lbtnDownloadDepList_Click" />
                     </div>
+                    <asp:Label ID="lblStatusMsgDepList" runat="server" Text=""></asp:Label>
                     <div class="py-1 pre-scrollable">
                         <asp:Table ID="tblDepList" runat="server" GridLines="Both" CssClass="table-dark"></asp:Table>
                     </div>
@@ -52,6 +51,15 @@
                     <div class="py-1">
                         <asp:Button CssClass="btn btn-outline-info" ID="btnGetLabAccts" runat="server" Text="Get Lab Accounts" OnClick="btnGetLabAccts_Click" />
                         <asp:LinkButton CssClass="pl-2" ID="lbtnDownloadLabAccts" runat="server" Text="Download Lab Accounts as CSV" OnClick="lbtnDownloadLabAccts_Click" OnClientClick="listDisplayedLabAccts();" />
+                        <p>
+                            <asp:Label ID="lblStatusMsgGetLabAccts" runat="server" Text=""></asp:Label>
+                        </p>
+                    </div>
+                    <div class="py-1">
+                        <asp:Button CssClass="btn btn-outline-warning" ID="btnRebuildLabAccts" runat="server" Text="Rebuild Lab Accounts Index" OnClick="btnRebuildLabAccts_Click" OnClientClick="return rebuildLabAccts();" />
+                        <p>
+                            <asp:Label ID="lblStatusMsgRebuildLabAccts" runat="server" Text=""></asp:Label>
+                        </p>
                     </div>
                     <script>
                         //var input = document.getElementById("btnFilterLabAccts");
@@ -138,6 +146,17 @@
                             }
 
                             document.getElementById("MainContent_hfLabAccts").value = text;
+                        }
+
+                        function rebuildLabAccts() {
+                            var envDev = document.getElementById("MainContent_rblistEpicICEnvs_0");
+
+                            if (envDev.checked) {
+                                return confirm("Rebuild lab accounts index (^ZZLABACCOUNTS)?");
+                            } else {
+                                alert("Rebuilding lab accounts index is currently not supported for the selected environment");
+                                return false;
+                            }
                         }
                     </script>
                 </div>

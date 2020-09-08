@@ -15,15 +15,6 @@ namespace org.ochin.interoperability.OCHINInterfaceUtilities
     {
 
         /// <summary>
-        /// lblStatusMsg control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lblStatusMsg;
-
-        /// <summary>
         /// rblistEpicICEnvs control.
         /// </summary>
         /// <remarks>
@@ -31,6 +22,15 @@ namespace org.ochin.interoperability.OCHINInterfaceUtilities
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.RadioButtonList rblistEpicICEnvs;
+
+        /// <summary>
+        /// lblStatusMsgEnvs control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblStatusMsgEnvs;
 
         /// <summary>
         /// tbSA control.
@@ -67,6 +67,15 @@ namespace org.ochin.interoperability.OCHINInterfaceUtilities
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.LinkButton lbtnDownloadDepList;
+
+        /// <summary>
+        /// lblStatusMsgDepList control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblStatusMsgDepList;
 
         /// <summary>
         /// tblDepList control.
@@ -121,5 +130,32 @@ namespace org.ochin.interoperability.OCHINInterfaceUtilities
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.LinkButton lbtnDownloadLabAccts;
+
+        /// <summary>
+        /// lblStatusMsgGetLabAccts control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblStatusMsgGetLabAccts;
+
+        /// <summary>
+        /// btnRebuildLabAccts control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button btnRebuildLabAccts;
+
+        /// <summary>
+        /// lblStatusMsgRebuildLabAccts control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblStatusMsgRebuildLabAccts;
     }
 }
