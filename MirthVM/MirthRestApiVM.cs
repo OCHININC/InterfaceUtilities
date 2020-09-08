@@ -21,7 +21,8 @@ namespace org.ochin.interoperability.OCHINInterfaceUtilities.Mirth
             string[] urls = serverUrls.Split(new char[] { ',', ';'}, StringSplitOptions.RemoveEmptyEntries);
             foreach (string url in urls)
             {
-                MirthServers.Add(new MirthServer(url));
+                string[] urlAlias = url.Split(new char[] { '|' }, StringSplitOptions.RemoveEmptyEntries);
+                MirthServers.Add(new MirthServer(urlAlias[0], urlAlias.Length > 1 ? urlAlias[1] : urlAlias[0]));
             }
         }
 
@@ -53,14 +54,14 @@ namespace org.ochin.interoperability.OCHINInterfaceUtilities.Mirth
             return allLoggedOut;
         }
 
-        public XmlDocument GetChannelStatuses(bool includeUndeployed)
+        public XmlDocument GetChannelStatuses(bool includeUndeployed, bool includeInputType = false)
         {
             XmlDocument doc = new XmlDocument();
             XmlElement servers = doc.CreateElement("servers");
 
             foreach (MirthServer server in MirthServers)
             {
-                if (server.GetChannelStatuses(includeUndeployed))
+                if (server.GetChannelStatuses(includeUndeployed) && (!includeInputType || server.GetChannels(false, true)))
                 {
                     XmlNode imported = doc.ImportNode(server.ToXml().DocumentElement, true);
                     servers.AppendChild(imported);

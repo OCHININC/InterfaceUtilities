@@ -14,6 +14,7 @@ namespace org.ochin.interoperability.OCHINInterfaceUtilities.Mirth
         public string State { get; set; }
         public string Server { get; private set; }
         public string Description { get; set; }
+        public SourceConnector SourceConn { get; private set; }
 
         public MirthChannel(string id, string name, string server, string state = "", string description = "")
         {
@@ -22,6 +23,8 @@ namespace org.ochin.interoperability.OCHINInterfaceUtilities.Mirth
             State = state;
             Server = server;
             Description = description;
+
+            SourceConn = new SourceConnector();
         }
 
         public XmlDocument ToXml()
@@ -49,6 +52,9 @@ namespace org.ochin.interoperability.OCHINInterfaceUtilities.Mirth
             description.InnerText = Description;
             channel.AppendChild(description);
 
+            var sourceConnector = doc.ImportNode(SourceConn.ToXml().DocumentElement, true);
+            channel.AppendChild(sourceConnector);
+
             doc.AppendChild(channel);
 
             return doc;
@@ -57,6 +63,25 @@ namespace org.ochin.interoperability.OCHINInterfaceUtilities.Mirth
         public override string ToString()
         {
             return ChannelId + "|" + Name + "|" + State;
+        }
+
+        public class SourceConnector
+        {
+            public string TransportName { get; set; }
+
+            public XmlDocument ToXml()
+            {
+                XmlDocument doc = new XmlDocument();
+                var sourceConnector = doc.CreateElement("sourceConnector");
+
+                var transportName = doc.CreateElement("transportName");
+                transportName.InnerText = TransportName;
+                sourceConnector.AppendChild(transportName);
+
+                doc.AppendChild(sourceConnector);
+
+                return doc;
+            }
         }
     }
 }

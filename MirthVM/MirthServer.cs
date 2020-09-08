@@ -19,12 +19,12 @@ namespace org.ochin.interoperability.OCHINInterfaceUtilities.Mirth
 
         public string Alias { get; private set; }
 
-        public MirthServer(string url)
+        public MirthServer(string url, string alias)
         {
             Channels = new Dictionary<string, MirthChannel>();
             ChannelTags = new List<MirthChannelTag>();
 
-            Alias = url;
+            Alias = alias;
             InitConnection(url);
         }
 
@@ -38,7 +38,7 @@ namespace org.ochin.interoperability.OCHINInterfaceUtilities.Mirth
             MirthConnection = new MirthConnection(baseUrl);
         }
 
-        private void ParseChannels(string xml)
+        private void ParseChannels(string xml, bool updateOnly = false)
         {
             XmlDocument doc = new XmlDocument();
             doc.LoadXml(xml);
@@ -48,14 +48,17 @@ namespace org.ochin.interoperability.OCHINInterfaceUtilities.Mirth
                 string id = channel.SelectSingleNode("descendant::id")?.InnerText;
                 string name = channel.SelectSingleNode("descendant::name")?.InnerText;
                 string description = channel.SelectSingleNode("descendant::description")?.InnerText;
+                string sourceConnectorTransportName = channel.SelectSingleNode("descendant::sourceConnector/transportName")?.InnerText;
 
                 if (Channels.ContainsKey(id))
                 {
                     Channels[id].Description = description;
+                    Channels[id].SourceConn.TransportName = sourceConnectorTransportName;
                 }
-                else
+                else if (!updateOnly)
                 {
                     MirthChannel c = new MirthChannel(id, name, Alias, string.Empty, description);
+                    c.SourceConn.TransportName = sourceConnectorTransportName;
                     Channels.Add(c.ChannelId, c);
                 }
             }
@@ -110,12 +113,12 @@ namespace org.ochin.interoperability.OCHINInterfaceUtilities.Mirth
             return MirthConnection.Logout(out statusMsg);
         }
 
-        public bool GetChannels(bool pollingOnly)
+        public bool GetChannels(bool pollingOnly, bool updateOnly = false)
         {
             bool res = MirthConnection.GetChannels(pollingOnly, out string channels);
             if (res)
             {
-                ParseChannels(channels);
+                ParseChannels(channels, updateOnly);
             }
             return res;
         }

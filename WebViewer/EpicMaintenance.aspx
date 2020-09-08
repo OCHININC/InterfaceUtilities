@@ -62,7 +62,8 @@
                                 <asp:BoundField DataField="state" HeaderText="State"></asp:BoundField>
                                 <asp:BoundField DataField="server" HeaderText="Server"></asp:BoundField>
                                 <asp:BoundField DataField="name" HeaderText="Name"></asp:BoundField>
-                                <asp:BoundField DataField="id" HeaderText="ID"></asp:BoundField>
+                                <asp:BoundField DataField="transportName" HeaderText="Source Type"></asp:BoundField>
+                                <asp:BoundField DataField="id" HeaderText="ID" Visible="false"></asp:BoundField>
                             </Columns>
                         </asp:GridView>
                     </div>
@@ -73,13 +74,8 @@
                             <asp:ListItem Selected="True" Enabled="False">Deployed</asp:ListItem>
                             <asp:ListItem Enabled="False">Undeployed</asp:ListItem>
                         </asp:CheckBoxList>
-                        <asp:CheckBoxList ID="cbListSourceType" runat="server" RepeatDirection="Horizontal" CellSpacing="10" Visible="false">
-                            <asp:ListItem>Channel Reader</asp:ListItem>
-                            <asp:ListItem Selected="True">HTTP Listener</asp:ListItem>
-                            <asp:ListItem Selected="True">TCP Listener</asp:ListItem>
-                            <asp:ListItem Selected="True">JavaScript Reader</asp:ListItem>
-                        </asp:CheckBoxList>
-                        <asp:CheckBoxList ID="cblistState" runat="server" RepeatDirection="Horizontal" CellSpacing="10" OnSelectedIndexChanged="cblistState_SelectedIndexChanged" AutoPostBack="True">
+                        <asp:CheckBox ID="cbNonChannelReaderOnly" runat="server" OnCheckedChanged="UpdateSelectedRows" AutoPostBack="true" Text="Non-'Channel Reader' Channels Only" Checked="true" />
+                        <asp:CheckBoxList ID="cblistState" runat="server" RepeatDirection="Horizontal" CellSpacing="10" OnSelectedIndexChanged="UpdateSelectedRows" AutoPostBack="True">
                             <asp:ListItem Selected="True">Started</asp:ListItem>
                             <asp:ListItem Selected="False">Stopped</asp:ListItem>
                         </asp:CheckBoxList>

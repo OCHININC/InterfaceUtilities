@@ -148,7 +148,7 @@ namespace org.ochin.interoperability.OCHINInterfaceUtilities
             MirthRestApiVM vm = (MirthRestApiVM)Session[SessionKey_EpicMaint_Mirth_VM];
             if (vm != null)
             {
-                XmlDocument doc = vm.GetChannelStatuses(false);
+                XmlDocument doc = vm.GetChannelStatuses(false, true);
 
                 DataSet dsChannels = new DataSet();
                 using (XmlReader xr = new XmlNodeReader(doc.DocumentElement))
@@ -156,17 +156,22 @@ namespace org.ochin.interoperability.OCHINInterfaceUtilities
                     dsChannels.ReadXml(xr);
                 }
 
-                gridChannels.DataSource = dsChannels.Tables[2].DefaultView;
+                var tableChannel = dsChannels.Tables["channel"];
+                var tableSourceConnector = dsChannels.Tables["sourceConnector"];
+
+                tableChannel.Merge(tableSourceConnector);
+
+                gridChannels.DataSource = tableChannel.DefaultView;
                 gridChannels.DataBind();
 
-                UpdateChannelsSummary();
-
-                cblistState_SelectedIndexChanged(sender, e);
+                UpdateSelectedRows(sender, e);
             }
         }
 
         private void UpdateChannelsSummary()
         {
+            uint selectedRows = 0;
+
             Dictionary<string, int> channelsSummary = new Dictionary<string, int>();
             foreach (GridViewRow row in gridChannels.Rows)
             {
@@ -181,6 +186,11 @@ namespace org.ochin.interoperability.OCHINInterfaceUtilities
                     {
                         channelsSummary.Add(state, 1);
                     }
+
+                    if ((row.Cells[0].FindControl("cbSelect") as CheckBox).Checked)
+                    {
+                        selectedRows++;
+                    }
                 }
             }
 
@@ -189,6 +199,7 @@ namespace org.ochin.interoperability.OCHINInterfaceUtilities
             {
                 sb.Append(s.Key + ": " + s.Value + " | ");
             }
+            sb.Append("Selected: " + selectedRows);
 
             lblChannelsSummary.Text = sb.ToString();
         }
@@ -251,8 +262,10 @@ namespace org.ochin.interoperability.OCHINInterfaceUtilities
             }
         }
 
-        protected void cblistState_SelectedIndexChanged(object sender, EventArgs e)
+        protected void UpdateSelectedRows(object sender, EventArgs e)
         {
+            bool nonChannelReaderOnly = cbNonChannelReaderOnly.Checked;
+
             foreach (ListItem item in cblistState.Items)
             {
                 foreach (GridViewRow row in gridChannels.Rows)
@@ -260,10 +273,15 @@ namespace org.ochin.interoperability.OCHINInterfaceUtilities
                     if (row.RowType == DataControlRowType.DataRow &&
                         row.Cells[1].Text.Equals(item.Text, StringComparison.OrdinalIgnoreCase))
                     {
-                        (row.Cells[0].FindControl("cbSelect") as CheckBox).Checked = item.Selected;
+                        // Select row if "State" and "Source Type" match checkbox selections
+                        (row.Cells[0].FindControl("cbSelect") as CheckBox).Checked =
+                            item.Selected
+                            && (!nonChannelReaderOnly || !row.Cells[4].Text.Equals("Channel Reader", StringComparison.OrdinalIgnoreCase));
                     }
                 }
             }
+
+            UpdateChannelsSummary();
         }
 
         protected void gridChannels_RowDataBound(object sender, GridViewRowEventArgs e)
