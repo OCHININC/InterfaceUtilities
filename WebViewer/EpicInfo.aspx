@@ -28,7 +28,7 @@
                     </div>
                     <asp:Label ID="lblStatusMsgDepList" runat="server" Text=""></asp:Label>
                     <div class="py-1 pre-scrollable">
-                        <asp:Table ID="tblDepList" runat="server" GridLines="Both" CssClass="table-dark"></asp:Table>
+                        <asp:Table ID="tblDepList" runat="server" GridLines="Both"></asp:Table>
                     </div>
                 </div>
             </div>
@@ -45,7 +45,7 @@
                         <asp:Button CssClass="btn btn-secondary" ID="btnFilterLabAccts" runat="server" Text="Apply Filters" OnClientClick="return filterTblLabAccts();" />
                     </div>
                     <div class="py-1 pre-scrollable">
-                        <asp:Table ID="tblLabAccts" runat="server" GridLines="Both" CssClass="table-dark"></asp:Table>
+                        <asp:Table ID="tblLabAccts" runat="server" GridLines="Both"></asp:Table>
                         <asp:HiddenField ID="hfLabAccts" runat="server" />
                     </div>
                     <div class="py-1">

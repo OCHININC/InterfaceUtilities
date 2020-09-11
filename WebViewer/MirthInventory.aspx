@@ -2,83 +2,105 @@
 
 <asp:Content ID="BodyContent" ContentPlaceHolderID="MainContent" runat="server">
     <script>
-    function showModalConfirm(msg) {
-        $(".modal .message").innerHtml(msg);
-        $(".modal").Show();
-    }
+        $(function () {
+            $('.selectpicker').selectpicker();
+        });
 
-    function filterMirthInventory() {
-        // Declare variables
-        var filterName, filterTags, filterServer, filterState;
-        var table, tr, td, i, j, txtValue;
-        filterName = document.getElementById("tbFilterMirthInventoryName").value.toUpperCase();
-        filterTags = document.getElementById("tbFilterMirthInventoryTags").value.toUpperCase();
-        filterServer = document.getElementById("tbFilterMirthInventoryServer").value.toUpperCase();
-        filterState = document.getElementById("tbFilterMirthInventoryState").value.toUpperCase();
+        function showModalConfirm(msg) {
+            $(".modal .message").innerHtml(msg);
+            $(".modal").Show();
+        }
 
-        table = document.getElementById("MainContent_gridMirthInventory");
-        tr = table.getElementsByTagName("tr");
+        function filterMirthInventory() {
+            // Declare variables
+            var filterName, filterServer, filterState;
+            var table, tr, td, txtValue;
+            filterName = document.getElementById("tbFilterMirthInventoryName").value.toUpperCase();
+            filterServer = document.getElementById("tbFilterMirthInventoryServer").value.toUpperCase();
+            filterState = document.getElementById("tbFilterMirthInventoryState").value.toUpperCase();
 
-        // Loop through all table rows (except for the header row), and hide those who don't match the search query
-        for (i = 1; i < tr.length; i++) {
-            td = tr[i].getElementsByTagName("td");
+            var selectedTags = $('.selectpicker').find('option:selected');
 
-            // Loop through filters
-            var filters = [filterName, filterTags, filterServer, filterState];
+            table = document.getElementById("MainContent_gridMirthInventory");
+            tr = table.getElementsByTagName("tr");
 
-            var found = true;
-            for (j = 0; j < filters.length; j++) {
-                var f = filters[j];
-                if (f != "" && td[j]) {
-                    txtValue = td[j].textContent || td[j].innerText;
-                    if (txtValue.toUpperCase().indexOf(f) < 0) {
-                        found = false;
-                        break;
+            // Loop through all table rows (except for the header row), and hide those who don't match the search query
+            for (var i = 1; i < tr.length; i++) {
+                td = tr[i].getElementsByTagName("td");
+
+                // Loop through filters
+                var filters = [filterName, selectedTags.val(), filterServer, filterState];
+
+                var found = true;
+                for (var j = 0; j < filters.length; j++) {
+                    var f = filters[j];
+                    if (f != "" && f != undefined && td[j]) {
+                        txtValue = td[j].textContent || td[j].innerText;
+                        if (j != 1) {
+                            if (txtValue.toUpperCase().indexOf(f) < 0) {
+                                found = false;
+                                break;
+                            }
+                        } else {
+                            var k = 0;
+                            for (k; k < selectedTags.length; k++) {
+                                // If this channel's tags contains any of the selected tags, continue with the other filters
+                                if ((txtValue.indexOf(selectedTags[k].value) > -1) ||
+                                    (txtValue == "" && selectedTags[k].value == "")) {
+                                    break;
+                                }
+                            }
+
+                            // If this channel's tags did not contain any of the selected tags, filter it out
+                            if (k == selectedTags.length) {
+                                found = false;
+                                break;
+                            }
+                        }
+                    }
+                }
+
+                if (found) {
+                    tr[i].style.display = "";
+                } else {
+                    tr[i].style.display = "none";
+                }
+            }
+
+            return false;
+        }
+
+        function listDisplayedMirthInventory() {
+            var text = "";
+
+            // Loop through Lab Accounts table to gather all displayed rows
+            var table, tr, td, i, j;
+
+            table = document.getElementById("MainContent_gridMirthInventory");
+            tr = table.getElementsByTagName("tr");
+
+            // Loop through all table rows (including header row)
+            for (i = 0; i < tr.length; i++) {
+                if (tr[i].style.display == "") {
+                    if (i > 0) {
+                        td = tr[i].getElementsByTagName("td");
+                    } else {
+                        td = tr[i].getElementsByTagName("th");
+                    }
+
+                    for (j = 0; j < td.length; j++) {
+                        text += td[j].innerText + ",";
+                    }
+
+                    if (text.endsWith(",")) {
+                        text = text.slice(0, text.length - 1);
+                        text += "\r\n";
                     }
                 }
             }
 
-            if (found) {
-                tr[i].style.display = "";
-            } else {
-                tr[i].style.display = "none";
-            }
+            document.getElementById("MainContent_hfMirthInventory").value = text;
         }
-
-        return false;
-    }
-
-    function listDisplayedMirthInventory() {
-        var text = "";
-
-        // Loop through Lab Accounts table to gather all displayed rows
-        var table, tr, td, i, j;
-
-        table = document.getElementById("MainContent_gridMirthInventory");
-        tr = table.getElementsByTagName("tr");
-
-        // Loop through all table rows (including header row)
-        for (i = 0; i < tr.length; i++) {
-            if (tr[i].style.display == "") {
-                if (i > 0) {
-                    td = tr[i].getElementsByTagName("td");
-                } else {
-                    td = tr[i].getElementsByTagName("th");
-                }
-
-                for (j = 0; j < td.length; j++) {
-                    text += td[j].innerText + ",";
-                }
-
-                if (text.endsWith(",")) {
-                    text = text.slice(0, text.length - 1);
-                    text += "\r\n";
-                }
-            }
-        }
-
-        document.getElementById("MainContent_hfMirthInventory").value = text;
-    }
     </script>
     <div class="row col-md-12">
         <asp:Label ID="lblStatusMsg" runat="server" Text=""></asp:Label>
@@ -116,7 +138,7 @@
                 <div class="card-body">
                     <div class="py-1">
                         <input type="text" placeholder="Name" id="tbFilterMirthInventoryName" />
-                        <input type="text" placeholder="Tags" id="tbFilterMirthInventoryTags" />
+                        <select id="lbTags" runat="server" class="selectpicker" multiple data-actions-box="true" data-live-search="true" title="Tags"></select>
                         <input type="text" placeholder="Server" id="tbFilterMirthInventoryServer" />
                         <input type="text" placeholder="State" id="tbFilterMirthInventoryState" />
                         <asp:Button CssClass="btn btn-secondary" ID="btnFilterMirthInventory" runat="server" Text="Apply Filters" OnClientClick="return filterMirthInventory();" />

@@ -1,9 +1,11 @@
-﻿using org.ochin.interoperability.OCHINInterfaceUtilities.Mirth;
+﻿using Microsoft.Ajax.Utilities;
+using org.ochin.interoperability.OCHINInterfaceUtilities.Mirth;
 using org.ochin.interoperability.OCHINInterfaceUtilities.Utilities;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
+using System.Linq;
 using System.Text;
 using System.Web.UI;
 using System.Web.UI.WebControls;
@@ -120,6 +122,26 @@ namespace org.ochin.interoperability.OCHINInterfaceUtilities
 
                 gridMirthInventory.DataSource = dsChannels.Tables[2].DefaultView;
                 gridMirthInventory.DataBind();
+
+                // Populate "Tags" filter list
+                HashSet<string> uniqueTags = new HashSet<string>();
+                XmlNodeList tagsNodes = doc.SelectNodes("/servers/server/channels/channel/tags");
+                foreach (XmlNode tagsNode in tagsNodes)
+                {
+                    string[] tags = tagsNode.InnerText.Split(new char[] { '|' }, StringSplitOptions.RemoveEmptyEntries);
+                    foreach (string tag in tags)
+                    {
+
+                        uniqueTags.Add(tag.Trim());
+                    }
+                }
+
+                var uniqueTagsList = uniqueTags.ToList();
+                uniqueTagsList.Sort();
+                foreach (var tag in uniqueTagsList)
+                {
+                    lbTags.Items.Add(new ListItem(tag));
+                }
             }
         }
 
