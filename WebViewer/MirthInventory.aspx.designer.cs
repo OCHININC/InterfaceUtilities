@@ -15,15 +15,6 @@ namespace org.ochin.interoperability.OCHINInterfaceUtilities
     {
 
         /// <summary>
-        /// lblStatusMsg control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lblStatusMsg;
-
-        /// <summary>
         /// rblistMirthEnvs control.
         /// </summary>
         /// <remarks>
@@ -67,6 +58,15 @@ namespace org.ochin.interoperability.OCHINInterfaceUtilities
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Button btnMirthLogout;
+
+        /// <summary>
+        /// lblStatusMsg control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblStatusMsg;
 
         /// <summary>
         /// lbTags control.

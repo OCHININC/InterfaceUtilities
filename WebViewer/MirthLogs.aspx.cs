@@ -13,6 +13,8 @@ namespace org.ochin.interoperability.OCHINInterfaceUtilities
 
         protected void Page_Load(object sender, EventArgs e)
         {
+            ClearStatusMessages();
+
             if (Session[SessionKey_MirthLogs_Server] == null)
             {
                 ReadConfig();
@@ -49,6 +51,11 @@ namespace org.ochin.interoperability.OCHINInterfaceUtilities
             }
         }
 
+        private void ClearStatusMessages()
+        {
+            lblStatusMsg.Text = string.Empty;
+        }
+
         protected void btnLogin_Click(object sender, EventArgs e)
         {
             string mirthLogsServer = (string)Session[SessionKey_MirthLogs_Server];
@@ -70,24 +77,30 @@ namespace org.ochin.interoperability.OCHINInterfaceUtilities
 
                 Session[SessionKey_MirthLogs_MirthSSHVM] = vm;
                 Session[SessionKey_MirthLogs_LoggedInUser] = tbUsername.Text;
-            }
 
-            lblStatusMsg.Text = statusMsg;
+                ClearStatusMessages();
+            }
+            else
+            {
+                lblStatusMsg.Text = statusMsg;
+            }
         }
 
         protected void btnLogout_Click(object sender, EventArgs e)
         {
             MirthSSHVM vm = (MirthSSHVM)Session[SessionKey_MirthLogs_MirthSSHVM];
-            if (vm != null)
+
+            if ((vm == null) || vm.Disconnect(out string statusMsg))
             {
-                if (vm.Disconnect(out string statusMsg))
-                {
-                    UserLoggedOut();
+                UserLoggedOut();
 
-                    Session[SessionKey_MirthLogs_MirthSSHVM] = null;
-                    Session[SessionKey_MirthLogs_LoggedInUser] = null;
-                }
+                Session[SessionKey_MirthLogs_MirthSSHVM] = null;
+                Session[SessionKey_MirthLogs_LoggedInUser] = null;
 
+                ClearStatusMessages();
+            }
+            else
+            {
                 lblStatusMsg.Text = statusMsg;
             }
         }

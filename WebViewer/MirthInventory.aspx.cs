@@ -23,6 +23,8 @@ namespace org.ochin.interoperability.OCHINInterfaceUtilities
 
         protected void Page_Load(object sender, EventArgs e)
         {
+            ClearStatusMessages();
+
             if (Session[SessionKey_MirthInfo_Mirth_Servers] == null)
             {
                 ReadConfig();
@@ -75,6 +77,11 @@ namespace org.ochin.interoperability.OCHINInterfaceUtilities
             rblistMirthEnvs.SelectedIndex = 0;
         }
 
+        private void ClearStatusMessages()
+        {
+            lblStatusMsg.Text = string.Empty;
+        }
+
         protected void btnMirthLogin_Click(object sender, EventArgs e)
         {
             MirthRestApiVM vm = new MirthRestApiVM(rblistMirthEnvs.SelectedValue);
@@ -85,24 +92,29 @@ namespace org.ochin.interoperability.OCHINInterfaceUtilities
 
                 Session[SessionKey_MirthInfo_Mirth_VM] = vm;
                 Session[SessionKey_MirthInfo_Mirth_LoggedInUser] = tbMirthUsername.Text;
-            }
 
-            lblStatusMsg.Text = statusMsg;
+                ClearStatusMessages();
+            }
+            else
+            {
+                lblStatusMsg.Text = statusMsg;
+            }
         }
 
         protected void btnMirthLogout_Click(object sender, EventArgs e)
         {
             MirthRestApiVM vm = (MirthRestApiVM)Session[SessionKey_MirthInfo_Mirth_VM];
-            if (vm != null)
+            if ((vm == null) || vm.Logout(out string statusMsg))
             {
-                if (vm.Logout(out string statusMsg))
-                {
-                    MirthUserLoggedOut();
+                MirthUserLoggedOut();
 
-                    Session[SessionKey_MirthInfo_Mirth_VM] = null;
-                    Session[SessionKey_MirthInfo_Mirth_LoggedInUser] = null;
-                }
+                Session[SessionKey_MirthInfo_Mirth_VM] = null;
+                Session[SessionKey_MirthInfo_Mirth_LoggedInUser] = null;
 
+                ClearStatusMessages();
+            }
+            else
+            {
                 lblStatusMsg.Text = statusMsg;
             }
         }

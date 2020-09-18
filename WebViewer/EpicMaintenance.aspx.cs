@@ -25,6 +25,8 @@ namespace org.ochin.interoperability.OCHINInterfaceUtilities
 
         protected void Page_Load(object sender, EventArgs e)
         {
+            ClearStatusMessages();
+
             if (Session[SessionKey_EpicMaint_Mirth_Servers] == null || Session[SessionKey_EpicMaint_Pentra_Servers] == null)
             {
                 ReadConfig();
@@ -111,6 +113,14 @@ namespace org.ochin.interoperability.OCHINInterfaceUtilities
             rblistPentraEnvs.SelectedIndex = 0;
         }
 
+        private void ClearStatusMessages()
+        {
+            lblStatusMsgMirthCredentials.Text = string.Empty;
+            lblStatusMsgPentraCredentials.Text = string.Empty;
+            lblStatusMsgMirthActions.Text = string.Empty;
+            lblStatusMsgPentraActions.Text = string.Empty;
+        }
+
         protected void btnMirthLogin_Click(object sender, EventArgs e)
         {
             MirthRestApiVM vm = new MirthRestApiVM(rblistMirthEnvs.SelectedValue);
@@ -121,25 +131,31 @@ namespace org.ochin.interoperability.OCHINInterfaceUtilities
 
                 Session[SessionKey_EpicMaint_Mirth_VM] = vm;
                 Session[SessionKey_EpicMaint_Mirth_LoggedInUser] = tbMirthUsername.Text;
-            }
 
-            lblStatusMsg.Text = statusMsg;
+                lblStatusMsgMirthCredentials.Text = string.Empty;
+            }
+            else
+            {
+                lblStatusMsgMirthCredentials.Text = statusMsg;
+            }
         }
 
         protected void btnMirthLogout_Click(object sender, EventArgs e)
         {
             MirthRestApiVM vm = (MirthRestApiVM)Session[SessionKey_EpicMaint_Mirth_VM];
-            if (vm != null)
+
+            if ((vm == null) || vm.Logout(out string statusMsg))
             {
-                if (vm.Logout(out string statusMsg))
-                {
-                    MirthUserLoggedOut();
+                MirthUserLoggedOut();
 
-                    Session[SessionKey_EpicMaint_Mirth_VM] = null;
-                    Session[SessionKey_EpicMaint_Mirth_LoggedInUser] = null;
-                }
+                Session[SessionKey_EpicMaint_Mirth_VM] = null;
+                Session[SessionKey_EpicMaint_Mirth_LoggedInUser] = null;
 
-                lblStatusMsg.Text = statusMsg;
+                lblStatusMsgMirthCredentials.Text = string.Empty;
+            }
+            else
+            {
+                lblStatusMsgMirthCredentials.Text = statusMsg;
             }
         }
 
@@ -215,7 +231,7 @@ namespace org.ochin.interoperability.OCHINInterfaceUtilities
                     if (row.RowType == DataControlRowType.DataRow &&
                         (row.Cells[0].FindControl("cbSelect") as CheckBox).Checked)
                     {
-                        channelIds.Add(row.Cells[4].Text);
+                        channelIds.Add(row.Cells[5].Text);
                     }
                 }
 
@@ -228,7 +244,7 @@ namespace org.ochin.interoperability.OCHINInterfaceUtilities
 
                     btnRefreshChannels_Click(sender, e);
 
-                    lblStatusMsg.Text = statusMsg;
+                    lblStatusMsgMirthActions.Text = statusMsg;
                 }
             }
         }
@@ -244,7 +260,7 @@ namespace org.ochin.interoperability.OCHINInterfaceUtilities
                     if (row.RowType == DataControlRowType.DataRow &&
                         (row.Cells[0].FindControl("cbSelect") as CheckBox).Checked)
                     {
-                        channelIds.Add(row.Cells[4].Text);
+                        channelIds.Add(row.Cells[5].Text);
                     }
                 }
 
@@ -257,7 +273,7 @@ namespace org.ochin.interoperability.OCHINInterfaceUtilities
 
                     btnRefreshChannels_Click(sender, e);
 
-                    lblStatusMsg.Text = statusMsg;
+                    lblStatusMsgMirthActions.Text = statusMsg;
                 }
             }
         }
@@ -315,25 +331,31 @@ namespace org.ochin.interoperability.OCHINInterfaceUtilities
 
                 Session[SessionKey_EpicMaint_Pentra_VM] = vm;
                 Session[SessionKey_EpicMaint_Pentra_LoggedInUser] = tbPentraUsername.Text;
-            }
 
-            lblStatusMsg.Text = statusMsg;
+                lblStatusMsgPentraCredentials.Text = string.Empty;
+            }
+            else
+            {
+                lblStatusMsgPentraCredentials.Text = statusMsg;
+            }
         }
 
         protected void btnPentraLogout_Click(object sender, EventArgs e)
         {
             PentraVM vm = (PentraVM)Session[SessionKey_EpicMaint_Pentra_VM];
-            if (vm != null)
+
+            if ((vm == null) ||vm.Disconnect(out string statusMsg))
             {
-                if (vm.Disconnect(out string statusMsg))
-                {
-                    PentraUserLoggedOut();
+                PentraUserLoggedOut();
 
-                    Session[SessionKey_EpicMaint_Pentra_VM] = null;
-                    Session[SessionKey_EpicMaint_Pentra_LoggedInUser] = null;
-                }
+                Session[SessionKey_EpicMaint_Pentra_VM] = null;
+                Session[SessionKey_EpicMaint_Pentra_LoggedInUser] = null;
 
-                lblStatusMsg.Text = statusMsg;
+                lblStatusMsgPentraCredentials.Text = string.Empty;
+            }
+            else
+            {
+                lblStatusMsgPentraCredentials.Text = statusMsg;
             }
         }
 
@@ -357,7 +379,7 @@ namespace org.ochin.interoperability.OCHINInterfaceUtilities
             {
                 vm.StopGateway(out string result, out string cmdExecuted);
 
-                lblStatusMsg.Text = result;
+                lblStatusMsgPentraActions.Text = result;
                 lblPentraCmd.Text = cmdExecuted;
             }
         }
@@ -369,7 +391,7 @@ namespace org.ochin.interoperability.OCHINInterfaceUtilities
             {
                 vm.StartGateway(out string result, out string cmdExecuted);
 
-                lblStatusMsg.Text = result;
+                lblStatusMsgPentraActions.Text = result;
                 lblPentraCmd.Text = cmdExecuted;
             }
         }

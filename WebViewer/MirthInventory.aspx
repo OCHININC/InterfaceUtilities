@@ -102,9 +102,6 @@
             document.getElementById("MainContent_hfMirthInventory").value = text;
         }
     </script>
-    <div class="row col-md-12">
-        <asp:Label ID="lblStatusMsg" runat="server" Text=""></asp:Label>
-    </div>
     <div class="row">
         <div class="col-md-4">
             <div class="card my-2">
@@ -129,6 +126,9 @@
                         <asp:Button CssClass="btn btn-dark" Text="Login" runat="server" ID="btnMirthLogin" OnClick="btnMirthLogin_Click" />
                         <asp:Button CssClass="btn btn-dark" Text="Logout" runat="server" ID="btnMirthLogout" OnClick="btnMirthLogout_Click" Enabled="false" />
                     </div>
+                    <div class="py-md-1">
+                        <asp:Label ID="lblStatusMsg" runat="server" Text="" ForeColor="Red"></asp:Label>
+                    </div>
                 </div>
             </div>
         </div>
@@ -138,7 +138,7 @@
                 <div class="card-body">
                     <div class="py-1">
                         <input type="text" placeholder="Name" id="tbFilterMirthInventoryName" />
-                        <select id="lbTags" runat="server" class="selectpicker" multiple data-actions-box="true" data-live-search="true" title="Tags"></select>
+                        <select id="lbTags" runat="server" class="selectpicker" multiple data-actions-box="true" data-live-search="true" title="Tags" style="outline:auto;outline-color:black"></select>
                         <input type="text" placeholder="Server" id="tbFilterMirthInventoryServer" />
                         <input type="text" placeholder="State" id="tbFilterMirthInventoryState" />
                         <asp:Button CssClass="btn btn-secondary" ID="btnFilterMirthInventory" runat="server" Text="Apply Filters" OnClientClick="return filterMirthInventory();" />

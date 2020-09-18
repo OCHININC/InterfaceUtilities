@@ -11,9 +11,6 @@
     <div class="row col-md-12">
         <a href="https://wiki.ochin.org/display/INTM/Interface+Epic+Maintenance+Process" target="_blank">WIKI - Epic Maintenance Process</a>
     </div>
-    <div class="row col-md-12">
-        <asp:Label ID="lblStatusMsg" runat="server" Text=""></asp:Label>
-    </div>
     <div class="row">
         <div class="col-md-12">
             <h2>Mirth</h2>
@@ -41,6 +38,9 @@
                         <asp:Button CssClass="btn btn-dark" Text="Login" runat="server" ID="btnMirthLogin" OnClick="btnMirthLogin_Click" />
                         <asp:Button CssClass="btn btn-dark" Text="Logout" runat="server" ID="btnMirthLogout" OnClick="btnMirthLogout_Click" Enabled="false" />
                     </div>
+                    <div class="py-md-1">
+                        <asp:Label ID="lblStatusMsgMirthCredentials" runat="server" Text=""></asp:Label>
+                    </div>
                 </div>
             </div>
         </div>
@@ -63,7 +63,7 @@
                                 <asp:BoundField DataField="server" HeaderText="Server"></asp:BoundField>
                                 <asp:BoundField DataField="name" HeaderText="Name"></asp:BoundField>
                                 <asp:BoundField DataField="transportName" HeaderText="Source Type"></asp:BoundField>
-                                <asp:BoundField DataField="id" HeaderText="ID" Visible="false"></asp:BoundField>
+                                <asp:BoundField DataField="id" HeaderText="ID"></asp:BoundField>
                             </Columns>
                         </asp:GridView>
                     </div>
@@ -87,6 +87,9 @@
                 <div class="card-body">
                     <asp:Button CssClass="btn btn-outline-danger" Text="Stop Selected Channels" runat="server" ID="btnStopChannels" OnClick="btnStopChannels_Click" Enabled="false" OnClientClick="return confirm('Stop all the selected channels?');" />
                     <asp:Button CssClass="btn btn-outline-info" Text="Start Selected Channels" runat="server" ID="btnStartChannels" OnClick="btnStartChannels_Click" Enabled="false" />
+                </div>
+                <div class="py-md-1">
+                    <asp:Label ID="lblStatusMsgMirthActions" runat="server" Text=""></asp:Label>
                 </div>
             </div>
         </div>
@@ -119,6 +122,9 @@
                         <asp:Button CssClass="btn btn-dark" Text="Login" runat="server" ID="btnPentraLogin" OnClick="btnPentraLogin_Click" />
                         <asp:Button CssClass="btn btn-dark" Text="Logout" runat="server" ID="btnPentraLogout" OnClick="btnPentraLogout_Click" Enabled="false" />
                     </div>
+                    <div class="py-md-1">
+                        <asp:Label ID="lblStatusMsgPentraCredentials" runat="server" Text=""></asp:Label>
+                    </div>
                 </div>
             </div>
         </div>
@@ -137,6 +143,9 @@
                 <div class="card-body">
                     <asp:Button CssClass="btn btn-outline-danger" Text="Stop Pentra Gateway" runat="server" ID="btnStopPentra" OnClick="btnStopPentra_Click" Enabled="false" OnClientClick="return confirm('Stop the Pentra Gateway?');" />
                     <asp:Button CssClass="btn btn-outline-info" Text="Start Pentra Gateway" runat="server" ID="btnStartPentra" OnClick="btnStartPentra_Click" Enabled="false" />
+                </div>
+                <div class="py-md-1">
+                    <asp:Label ID="lblStatusMsgPentraActions" runat="server" Text=""></asp:Label>
                 </div>
             </div>
             <div>

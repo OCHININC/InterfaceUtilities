@@ -15,15 +15,6 @@ namespace org.ochin.interoperability.OCHINInterfaceUtilities
     {
 
         /// <summary>
-        /// lblStatusMsg control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lblStatusMsg;
-
-        /// <summary>
         /// rblistMirthEnvs control.
         /// </summary>
         /// <remarks>
@@ -67,6 +58,15 @@ namespace org.ochin.interoperability.OCHINInterfaceUtilities
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Button btnMirthLogout;
+
+        /// <summary>
+        /// lblStatusMsgMirthCredentials control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblStatusMsgMirthCredentials;
 
         /// <summary>
         /// lblChannelsSummary control.
@@ -141,6 +141,15 @@ namespace org.ochin.interoperability.OCHINInterfaceUtilities
         protected global::System.Web.UI.WebControls.Button btnStartChannels;
 
         /// <summary>
+        /// lblStatusMsgMirthActions control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblStatusMsgMirthActions;
+
+        /// <summary>
         /// rblistPentraEnvs control.
         /// </summary>
         /// <remarks>
@@ -186,6 +195,15 @@ namespace org.ochin.interoperability.OCHINInterfaceUtilities
         protected global::System.Web.UI.WebControls.Button btnPentraLogout;
 
         /// <summary>
+        /// lblStatusMsgPentraCredentials control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblStatusMsgPentraCredentials;
+
+        /// <summary>
         /// tbPentraGatewayLog control.
         /// </summary>
         /// <remarks>
@@ -229,6 +247,15 @@ namespace org.ochin.interoperability.OCHINInterfaceUtilities
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Button btnStartPentra;
+
+        /// <summary>
+        /// lblStatusMsgPentraActions control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblStatusMsgPentraActions;
 
         /// <summary>
         /// lblPentraCmd control.
