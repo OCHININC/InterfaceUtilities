@@ -22,5 +22,22 @@ namespace org.ochin.interoperability.OCHINInterfaceUtilities.Mirth
 
             return RunCommand(cmd, false, out result, out cmdExecuted);
         }
+
+        public bool ListFiles(string files, bool ignoreCase, bool regEx, out string result, out string cmdExecuted)
+        {
+            string options = string.Empty;
+            if (ignoreCase)
+                options = "i";
+
+            if (regEx)
+                options += "E";
+
+            if (!string.IsNullOrEmpty(options))
+                options = "-" + options;
+
+            string cmd = $"ls /usr/local/ochin/mirth/logs/prd/archive/ | grep {options} \"{files}\"";
+
+            return RunCommand(cmd, false, out result, out cmdExecuted);
+        }
     }
 }

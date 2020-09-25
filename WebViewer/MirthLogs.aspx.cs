@@ -112,7 +112,18 @@ namespace org.ochin.interoperability.OCHINInterfaceUtilities
             {
                 _ = vm.SearchPrdLogs(tbSearchText.Text, tbSearchFiles.Value, cbIgnoreCase.Checked, cbRegEx.Checked, out string result, out string cmdExecuted);
                 tbSearchResults.Text = result;
-                lblSearchCmd.Text = cmdExecuted;
+                lblCmd.Text = cmdExecuted;
+            }
+        }
+
+        protected void btnListFiles_Click(object sender, EventArgs e)
+        {
+            MirthSSHVM vm = (MirthSSHVM)Session[SessionKey_MirthLogs_MirthSSHVM];
+            if (vm != null)
+            {
+                _ = vm.ListFiles(tbSearchFiles.Value, cbIgnoreCase.Checked, cbRegEx.Checked, out string result, out string cmdExecuted);
+                tbSearchResults.Text = result;
+                lblCmd.Text = cmdExecuted;
             }
         }
 
@@ -121,6 +132,7 @@ namespace org.ochin.interoperability.OCHINInterfaceUtilities
             btnLogin.Enabled = false;
             btnLogout.Enabled = true;
             btnSearch.Enabled = true;
+            btnListFiles.Enabled = true;
         }
 
         private void UserLoggedOut()
@@ -128,6 +140,7 @@ namespace org.ochin.interoperability.OCHINInterfaceUtilities
             btnLogin.Enabled = true;
             btnLogout.Enabled = false;
             btnSearch.Enabled = false;
+            btnListFiles.Enabled = false;
         }
     }
 }

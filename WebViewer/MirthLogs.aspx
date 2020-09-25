@@ -36,9 +36,10 @@
                     <asp:Label runat="server" Text="Files to search: " />
                     <input ID="tbSearchFiles" runat="server" style="max-width:500px;width:100%" placeholder="ie. Lab_Quest_Hub_Orders202005*" />
                 </div>
-                <div>
+                <div class="py-2">
                     <asp:Button CssClass="btn btn-outline-info" ID="btnSearch" runat="server" Text="Search" Enabled="false" OnClick="btnSearch_Click" />
-                    <asp:Label runat="server" ID="lblSearchCmd" Font-Italic="True" Font-Size="Small" ForeColor="Blue" />
+                    <asp:Button CssClass="btn btn-outline-info" ID="btnListFiles" runat="server" Text="List Files" Enabled="false" OnClick="btnListFiles_Click" />
+                    <asp:Label runat="server" ID="lblCmd" Font-Italic="True" Font-Size="Small" ForeColor="Blue" />
                 </div>
                 <asp:Panel runat="server" GroupingText="Search Results">
                     <div class="col-md-12">

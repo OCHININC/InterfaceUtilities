@@ -105,13 +105,22 @@ namespace org.ochin.interoperability.OCHINInterfaceUtilities
         protected global::System.Web.UI.WebControls.Button btnSearch;
 
         /// <summary>
-        /// lblSearchCmd control.
+        /// btnListFiles control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lblSearchCmd;
+        protected global::System.Web.UI.WebControls.Button btnListFiles;
+
+        /// <summary>
+        /// lblCmd control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblCmd;
 
         /// <summary>
         /// tbSearchResults control.
