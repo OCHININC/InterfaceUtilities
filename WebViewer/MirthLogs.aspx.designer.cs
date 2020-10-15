@@ -96,6 +96,15 @@ namespace org.ochin.interoperability.OCHINInterfaceUtilities
         protected global::System.Web.UI.HtmlControls.HtmlInputText tbSearchFiles;
 
         /// <summary>
+        /// cbSpaceLogLines control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.CheckBox cbSpaceLogLines;
+
+        /// <summary>
         /// btnSearch control.
         /// </summary>
         /// <remarks>

@@ -111,6 +111,12 @@ namespace org.ochin.interoperability.OCHINInterfaceUtilities
             if (vm != null)
             {
                 _ = vm.SearchPrdLogs(tbSearchText.Text, tbSearchFiles.Value, cbIgnoreCase.Checked, cbRegEx.Checked, out string result, out string cmdExecuted);
+
+                if (cbSpaceLogLines.Checked)
+                {
+                    result = result.Replace("\r\n", "\r\n\r\n");
+                }
+
                 tbSearchResults.Text = result;
                 lblCmd.Text = cmdExecuted;
             }

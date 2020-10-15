@@ -32,9 +32,12 @@
                     <asp:CheckBox ID="cbIgnoreCase" runat="server" Checked="false" Text="Ignore Case" CssClass="px-md-2" />
                     <asp:CheckBox ID="cbRegEx" runat="server" Checked="false" Text="Regular Expression" CssClass="px-md-2" />
                 </div>
-                <div>
+                <div class="py-2">
                     <asp:Label runat="server" Text="Files to search: " />
                     <input ID="tbSearchFiles" runat="server" style="max-width:500px;width:100%" placeholder="ie. Lab_Quest_Hub_Orders202005*" />
+                </div>
+                <div>
+                    <asp:CheckBox ID="cbSpaceLogLines" runat="server" Checked="true" Text="Add line between log entries (experimental)" CssClass="px-md-2" />
                 </div>
                 <div class="py-2">
                     <asp:Button CssClass="btn btn-outline-info" ID="btnSearch" runat="server" Text="Search" Enabled="false" OnClick="btnSearch_Click" />
