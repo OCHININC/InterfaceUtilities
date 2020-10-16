@@ -124,7 +124,7 @@ namespace org.ochin.interoperability.OCHINInterfaceUtilities
             MirthRestApiVM vm = (MirthRestApiVM)Session[SessionKey_MirthInfo_Mirth_VM];
             if (vm != null)
             {
-                XmlDocument doc = vm.GetChannelTags(cbIncludeDesc.Checked);
+                XmlDocument doc = vm.GetChannelTags(cbIncludeDesc.Checked, out HashSet<string> uniqueTags, out HashSet<string> uniqueServers, out HashSet<string> uniqueStates);
 
                 DataSet dsChannels = new DataSet();
                 using (XmlReader xr = new XmlNodeReader(doc.DocumentElement))
@@ -136,23 +136,37 @@ namespace org.ochin.interoperability.OCHINInterfaceUtilities
                 gridMirthInventory.DataBind();
 
                 // Populate "Tags" filter list
-                HashSet<string> uniqueTags = new HashSet<string>();
-                XmlNodeList tagsNodes = doc.SelectNodes("/servers/server/channels/channel/tags");
-                foreach (XmlNode tagsNode in tagsNodes)
-                {
-                    string[] tags = tagsNode.InnerText.Split(new char[] { '|' }, StringSplitOptions.RemoveEmptyEntries);
-                    foreach (string tag in tags)
-                    {
+                //HashSet<string> uniqueTags = new HashSet<string>();
+                //XmlNodeList tagsNodes = doc.SelectNodes("/servers/server/channels/channel/tags");
+                //foreach (XmlNode tagsNode in tagsNodes)
+                //{
+                //    string[] tags = tagsNode.InnerText.Split(new char[] { '|' }, StringSplitOptions.RemoveEmptyEntries);
+                //    foreach (string tag in tags)
+                //    {
 
-                        uniqueTags.Add(tag.Trim());
-                    }
-                }
+                //        uniqueTags.Add(tag.Trim());
+                //    }
+                //}
 
                 var uniqueTagsList = uniqueTags.ToList();
                 uniqueTagsList.Sort();
                 foreach (var tag in uniqueTagsList)
                 {
                     lbTags.Items.Add(new ListItem(tag));
+                }
+
+                var uniqueServersList = uniqueServers.ToList();
+                uniqueServersList.Sort();
+                foreach (var server in uniqueServersList)
+                {
+                    lbServers.Items.Add(new ListItem(server));
+                }
+
+                var uniqueStatesList = uniqueStates.ToList();
+                uniqueStatesList.Sort();
+                foreach (var state in uniqueStatesList)
+                {
+                    lbStates.Items.Add(new ListItem(state));
                 }
             }
         }

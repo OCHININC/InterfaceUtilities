@@ -13,46 +13,58 @@
 
         function filterMirthInventory() {
             // Declare variables
-            var filterName, filterServer, filterState;
+            var filterName;
             var table, tr, td, txtValue;
             filterName = document.getElementById("tbFilterMirthInventoryName").value.toUpperCase();
-            filterServer = document.getElementById("tbFilterMirthInventoryServer").value.toUpperCase();
-            filterState = document.getElementById("tbFilterMirthInventoryState").value.toUpperCase();
 
-            var selectedTags = $('.selectpicker').find('option:selected');
+            //var selectedTags = $('.selectpicker').find('option:selected');
+            var selectedTags = $("#MainContent_lbTags").find('option:selected');
+            var selectedServers = $("#MainContent_lbServers").find('option:selected');
+            var selectedStates = $("#MainContent_lbStates").find('option:selected');
 
             table = document.getElementById("MainContent_gridMirthInventory");
             tr = table.getElementsByTagName("tr");
+            var filters = [[filterName], selectedTags, selectedServers, selectedStates];
 
             // Loop through all table rows (except for the header row), and hide those who don't match the search query
             for (var i = 1; i < tr.length; i++) {
                 td = tr[i].getElementsByTagName("td");
 
                 // Loop through filters
-                var filters = [filterName, selectedTags.val(), filterServer, filterState];
-
                 var found = true;
                 for (var j = 0; j < filters.length; j++) {
                     var f = filters[j];
-                    if (f != "" && f != undefined && td[j]) {
+
+                    if (f != undefined && f.length > 0 && td[j]) {;
                         txtValue = td[j].textContent || td[j].innerText;
-                        if (j != 1) {
-                            if (txtValue.toUpperCase().indexOf(f) < 0) {
+                        if (j == 0) {
+                            if (txtValue.toUpperCase().indexOf(f[0]) < 0) {
                                 found = false;
                                 break;
                             }
                         } else {
                             var k = 0;
-                            for (k; k < selectedTags.length; k++) {
-                                // If this channel's tags contains any of the selected tags, continue with the other filters
-                                if ((txtValue.indexOf(selectedTags[k].value) > -1) ||
-                                    (txtValue == "" && selectedTags[k].value == "")) {
-                                    break;
+                            var breakOut = false;
+                            for (k; k < f.length; k++) {
+                                // Include channels with not tags if no tag filters are selected
+                                if (txtValue == "" && f[k].value == "") {
+                                    breakOut = true;
                                 }
+
+                                // If this channel's tags contains any of the selected tags, continue with the other filters
+                                var values = txtValue.split('|');
+                                for (var l = 0; l < values.length; l++) {
+                                    if (values[l].trim() == f[k].value) {
+                                        breakOut = true;
+                                        break;
+                                    }
+                                }
+
+                                if (breakOut) break;
                             }
 
                             // If this channel's tags did not contain any of the selected tags, filter it out
-                            if (k == selectedTags.length) {
+                            if (k == f.length) {
                                 found = false;
                                 break;
                             }
@@ -138,9 +150,9 @@
                 <div class="card-body">
                     <div class="py-1">
                         <input type="text" placeholder="Name" id="tbFilterMirthInventoryName" />
-                        <select id="lbTags" runat="server" class="selectpicker" multiple data-actions-box="true" data-live-search="true" title="Tags" style="outline:auto;outline-color:black"></select>
-                        <input type="text" placeholder="Server" id="tbFilterMirthInventoryServer" />
-                        <input type="text" placeholder="State" id="tbFilterMirthInventoryState" />
+                        <select id="lbTags" runat="server" class="selectpicker" multiple data-actions-box="true" data-live-search="true" title="All Tags"></select>
+                        <select id="lbServers" runat="server" class="selectpicker" multiple data-actions-box="true" data-live-search="true" title="All Servers"></select>
+                        <select id="lbStates" runat="server" class="selectpicker" multiple data-actions-box="true" data-live-search="true" title="All States"></select>
                         <asp:Button CssClass="btn btn-secondary" ID="btnFilterMirthInventory" runat="server" Text="Apply Filters" OnClientClick="return filterMirthInventory();" />
                     </div>
                     <div style="overflow:auto;max-height:400px">

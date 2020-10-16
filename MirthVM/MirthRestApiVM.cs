@@ -73,28 +73,46 @@ namespace org.ochin.interoperability.OCHINInterfaceUtilities.Mirth
             return doc;
         }
 
-        public XmlDocument GetChannelTags(bool includeDesc)
+        public XmlDocument GetChannelTags(bool includeDesc, out HashSet<string> uniqueTags, out HashSet<string> uniqueServers, out HashSet<string> uniqueStates)
         {
             XmlDocument doc = new XmlDocument();
             XmlElement servers = doc.CreateElement("servers");
 
+            uniqueTags = new HashSet<string>();
+            uniqueServers = new HashSet<string>();
+            uniqueStates = new HashSet<string>();
+
             // Loop through all the servers
-            foreach (MirthServer server in MirthServers)
+            foreach (MirthServer mirthServer in MirthServers)
             {
-                if (server.GetChannelStatuses(true) && server.GetServerChannelTags() && (!includeDesc || server.GetChannels(false)))
+                if (mirthServer.GetChannelStatuses(true) && mirthServer.GetServerChannelTags() && (!includeDesc || mirthServer.GetChannels(false)))
                 {
-                    XmlDocument serverDoc = server.ToXml();
+                    XmlDocument serverDoc = mirthServer.ToXml();
 
                     // Loop through all the channels in the server
                     foreach (XmlNode channel in serverDoc.SelectNodes("/server/channels/channel"))
                     {
                         string id = channel.SelectSingleNode("id")?.InnerText;
 
+                        string server = channel.SelectSingleNode("server")?.InnerText;
+                        if (!string.IsNullOrEmpty(server))
+                        {
+                            uniqueServers.Add(server);
+                        }
+
+                        string state = channel.SelectSingleNode("state")?.InnerText;
+                        if (!string.IsNullOrEmpty(state))
+                        {
+                            uniqueStates.Add(state);
+                        }
+
                         // Find all the tags that are associated to this channel
                         List<string> tagNames = new List<string>();
-                        foreach (var channelTag in server.ChannelTags.Where(ct => ct.channelIds.Contains(id)))
+                        foreach (var channelTag in mirthServer.ChannelTags.Where(ct => ct.channelIds.Contains(id)))
                         {
                             tagNames.Add(channelTag.name);
+
+                            uniqueTags.Add(channelTag.name);
                         }
 
                         // Add the tag names to the channel

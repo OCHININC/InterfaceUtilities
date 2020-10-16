@@ -78,6 +78,24 @@ namespace org.ochin.interoperability.OCHINInterfaceUtilities
         protected global::System.Web.UI.HtmlControls.HtmlSelect lbTags;
 
         /// <summary>
+        /// lbServers control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlSelect lbServers;
+
+        /// <summary>
+        /// lbStates control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlSelect lbStates;
+
+        /// <summary>
         /// btnFilterMirthInventory control.
         /// </summary>
         /// <remarks>
