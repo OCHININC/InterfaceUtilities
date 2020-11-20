@@ -11,44 +11,53 @@ namespace org.ochin.interoperability.OCHINInterfaceUtilities
 {
 
 
-    public partial class MirthLogs
+    public partial class MirthConfigMap
     {
 
         /// <summary>
-        /// tbUsername control.
+        /// rblistMirthEnvs control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox tbUsername;
+        protected global::System.Web.UI.WebControls.RadioButtonList rblistMirthEnvs;
 
         /// <summary>
-        /// tbPassword control.
+        /// tbMirthUsername control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox tbPassword;
+        protected global::System.Web.UI.WebControls.TextBox tbMirthUsername;
 
         /// <summary>
-        /// btnLogin control.
+        /// tbMirthPassword control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Button btnLogin;
+        protected global::System.Web.UI.WebControls.TextBox tbMirthPassword;
 
         /// <summary>
-        /// btnLogout control.
+        /// btnMirthLogin control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Button btnLogout;
+        protected global::System.Web.UI.WebControls.Button btnMirthLogin;
+
+        /// <summary>
+        /// btnMirthLogout control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button btnMirthLogout;
 
         /// <summary>
         /// lblStatusMsg control.
@@ -60,102 +69,138 @@ namespace org.ochin.interoperability.OCHINInterfaceUtilities
         protected global::System.Web.UI.WebControls.Label lblStatusMsg;
 
         /// <summary>
-        /// tbSearchText control.
+        /// btnFilterMirthConfigMap control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox tbSearchText;
+        protected global::System.Web.UI.WebControls.Button btnFilterMirthConfigMap;
 
         /// <summary>
-        /// cbIgnoreCase control.
+        /// gridMirthConfigMap control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.CheckBox cbIgnoreCase;
+        protected global::System.Web.UI.WebControls.GridView gridMirthConfigMap;
 
         /// <summary>
-        /// cbRegEx control.
+        /// btnGetMirthConfigMap control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.CheckBox cbRegEx;
+        protected global::System.Web.UI.WebControls.Button btnGetMirthConfigMap;
 
         /// <summary>
-        /// tbSearchFiles control.
+        /// lbtnDownloadMirthConfigMap control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlInputText tbSearchFiles;
+        protected global::System.Web.UI.WebControls.LinkButton lbtnDownloadMirthConfigMap;
 
         /// <summary>
-        /// ddlLogFiles control.
+        /// hfMirthConfigMap control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlSelect ddlLogFiles;
+        protected global::System.Web.UI.WebControls.HiddenField hfMirthConfigMap;
 
         /// <summary>
-        /// btnRefreshLogFilesList control.
+        /// tbAddMirthConfigMapKey control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Button btnRefreshLogFilesList;
+        protected global::System.Web.UI.HtmlControls.HtmlInputText tbAddMirthConfigMapKey;
 
         /// <summary>
-        /// cbSpaceLogLines control.
+        /// tbAddMirthConfigMapValue control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.CheckBox cbSpaceLogLines;
+        protected global::System.Web.UI.HtmlControls.HtmlInputText tbAddMirthConfigMapValue;
 
         /// <summary>
-        /// btnSearch control.
+        /// tbAddMirthConfigMapComment control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Button btnSearch;
+        protected global::System.Web.UI.HtmlControls.HtmlInputText tbAddMirthConfigMapComment;
 
         /// <summary>
-        /// btnListFiles control.
+        /// btnAddMirthConfigMapEntry control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Button btnListFiles;
+        protected global::System.Web.UI.WebControls.Button btnAddMirthConfigMapEntry;
 
         /// <summary>
-        /// lblCmd control.
+        /// btnAddTrizettoRemitInboundSA control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lblCmd;
+        protected global::System.Web.UI.HtmlControls.HtmlButton btnAddTrizettoRemitInboundSA;
 
         /// <summary>
-        /// tbSearchResults control.
+        /// tbAddRemitInboundSASA control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox tbSearchResults;
+        protected global::System.Web.UI.HtmlControls.HtmlInputText tbAddRemitInboundSASA;
+
+        /// <summary>
+        /// tbAddRemitInboundSAName control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlInputText tbAddRemitInboundSAName;
+
+        /// <summary>
+        /// tbAddRemitInboundSAContacts control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlInputText tbAddRemitInboundSAContacts;
+
+        /// <summary>
+        /// btnAddRemitInboundSAAdd control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button btnAddRemitInboundSAAdd;
+
+        /// <summary>
+        /// lblMirthConfigMapStatus control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblMirthConfigMapStatus;
     }
 }

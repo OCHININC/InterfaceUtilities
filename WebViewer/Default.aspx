@@ -28,6 +28,10 @@
                     <img src="Images/outline_find_in_page_black_48dp.png" alt="MirthLogsSearch" />
                     <p>Logs Search</p>
                 </a>
+                <a href="MirthConfigMap.aspx" class="mx-5 d-block float-left text-center">
+                    <img src="Images/outline_text_snippet_black_48dp.png" alt="MirthConfigMap" />
+                    <p>Config Map</p>
+                </a>
             </div>
         </div>
     </div>

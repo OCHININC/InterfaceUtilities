@@ -82,6 +82,7 @@
                             <div class="dropdown-menu">
                                 <a class="dropdown-item" href="MirthInventory">Inventory</a>
                                 <a class="dropdown-item" href="MirthLogs">Log Search</a>
+                                <a class="dropdown-item" href="MirthConfigMap">Config Map</a>
                             </div>
                         </li>
                     </ul>

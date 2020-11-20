@@ -18,6 +18,7 @@ namespace org.ochin.interoperability.OCHINInterfaceUtilities
         private static readonly string SessionKey_MirthInfo_Mirth_LoggedInUser = "MirthInfo_Mirth_LoggedInUser";
         private static readonly string SessionKey_MirthInfo_Mirth_Servers = "MirthInfo_Mirth_Servers";
         private static readonly string SessionKey_MirthInfo_Mirth_VM = "MirthInfo_Mirth_VM";
+        private static readonly string SessionKey_MirthInfo_Inventory = "MirthInfo_Inventory";
 
         private static readonly string ViewStateKey_MirthInfo_MirthInventory = "MirthInfo_MirthInventory";
 
@@ -132,6 +133,8 @@ namespace org.ochin.interoperability.OCHINInterfaceUtilities
                     dsChannels.ReadXml(xr);
                 }
 
+                Session[SessionKey_MirthInfo_Inventory] = dsChannels.Tables[2].DefaultView;
+
                 gridMirthInventory.DataSource = dsChannels.Tables[2].DefaultView;
                 gridMirthInventory.DataBind();
 
@@ -169,6 +172,25 @@ namespace org.ochin.interoperability.OCHINInterfaceUtilities
                     lbStates.Items.Add(new ListItem(state));
                 }
             }
+        }
+
+        protected void gridMirthInventory_Sorting(object sender, GridViewSortEventArgs e)
+        {
+            GridView grid = sender as GridView;
+            DataView data = Session[SessionKey_MirthInfo_Inventory] as DataView;
+
+            // if sorting on this column for the first time, always sort ascending (default)
+            // else flip the current order
+            if (data.Sort == e.SortExpression &&
+                e.SortDirection == SortDirection.Ascending)
+            {
+                data.Sort = e.SortExpression + " DESC";
+            }
+            else
+                data.Sort = e.SortExpression;
+
+            grid.DataSource = data;
+            grid.DataBind();
         }
 
         protected void lbtnDownloadMirthInventory_Click(object sender, EventArgs e)

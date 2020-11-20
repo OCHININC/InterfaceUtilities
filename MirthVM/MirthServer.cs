@@ -14,6 +14,7 @@ namespace org.ochin.interoperability.OCHINInterfaceUtilities.Mirth
         // Using a Dictionary for "indexing" purposes
         public Dictionary<string, MirthChannel> Channels { get; private set; }
         public List<MirthChannelTag> ChannelTags { get; private set; }
+        public MirthConfigMap ConfigMap { get; private set; }
 
         public MirthConnection MirthConnection { get; private set; }
 
@@ -69,7 +70,7 @@ namespace org.ochin.interoperability.OCHINInterfaceUtilities.Mirth
             XmlDocument doc = new XmlDocument();
             doc.LoadXml(xml);
 
-            foreach (XmlNode channel in doc.SelectNodes("/list/dashboardStatus[statusType='CHANNEL']"))
+            foreach (XmlNode channel in doc.SelectNodes("/list/dashboardStatus[statusType='CHANNEL']|/list/com.mirth.connect.plugins.clusteringadvanced.shared.ClusterDashboardStatus[statusType='CHANNEL']"))
             {
                 string id = channel.SelectSingleNode("descendant::channelId")?.InnerText;
                 string name = channel.SelectSingleNode("descendant::name")?.InnerText;
@@ -140,6 +141,90 @@ namespace org.ochin.interoperability.OCHINInterfaceUtilities.Mirth
             {
                 ParseChannelTags(tags);
             }
+            return res;
+        }
+
+        public bool ConfigMapGet()
+        {
+            bool res = MirthConnection.GetConfigMap(out string configMap);
+            if (res)
+            {
+                XmlSerializer xs = new XmlSerializer(typeof(MirthConfigMap));
+                using (TextReader tr = new StringReader(configMap))
+                {
+                    ConfigMap = (MirthConfigMap)xs.Deserialize(tr);
+                }
+            }
+            return res;
+        }
+
+        public bool ConfigMapPut(out string resultString)
+        {
+            return MirthConnection.PutConfigMap(ConfigMap.GetXml().OuterXml, out resultString);
+        }
+
+        public bool ConfigMapGetEntry(string key, out string resultString)
+        {
+            bool res = false;
+            resultString = string.Empty;
+
+            if (ConfigMap == null)
+            {
+                ConfigMapGet();
+            }
+
+            if (ConfigMap != null)
+            {
+                resultString = ConfigMap.GetEntry(key);
+                res = true;
+            }
+
+            return res;
+        }
+
+        public bool ConfigMapUpdateEntry(string key, string value, string comment, bool appendValue, bool appendComment, out string resultString)
+        {
+            bool res = false;
+            resultString = string.Empty;
+
+            if (ConfigMap == null)
+            {
+                ConfigMapGet();
+            }
+
+            if (ConfigMap != null)
+            {
+                ConfigMap.UpdateEntry(key, value, comment, appendValue, appendComment);
+
+                res &= ConfigMapPut(out string result);
+
+                if (!string.IsNullOrEmpty(resultString))
+                    resultString += Alias + " - " + result + Environment.NewLine;
+            }
+
+            return res;
+        }
+
+        public bool ConfigMapRemoveEntry(string key, out string resultString)
+        {
+            bool res = false;
+            resultString = string.Empty;
+
+            if (ConfigMap == null)
+            {
+                ConfigMapGet();
+            }
+
+            if (ConfigMap != null)
+            {
+                ConfigMap.RemoveEntry(key);
+
+                res &= ConfigMapPut(out string result);
+
+                if (!string.IsNullOrEmpty(resultString))
+                    resultString += Alias + " - " + result + Environment.NewLine;
+            }
+
             return res;
         }
 

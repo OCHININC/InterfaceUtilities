@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml;
+using System.Xml.Serialization;
 
 namespace org.ochin.interoperability.OCHINInterfaceUtilities.Mirth
 {
@@ -129,6 +131,155 @@ namespace org.ochin.interoperability.OCHINInterfaceUtilities.Mirth
             doc.AppendChild(servers);
 
             return doc;
+        }
+
+        public XmlDocument GetConfigMap()
+        {
+            XmlDocument doc = new XmlDocument();
+
+            // Loop through all the servers
+            foreach (MirthServer mirthServer in MirthServers)
+            {
+                if (mirthServer.ConfigMapGet())
+                {
+                    doc = mirthServer.ConfigMap.GetSimplifiedXml();
+                }
+            }
+
+            return doc;
+        }
+
+        //public bool AddConfigMapEntry(string key, string value, string comment, out string result)
+        //{
+        //    bool res = true;
+        //    result = string.Empty;
+
+        //    // Loop through all the servers
+        //    foreach (MirthServer mirthServer in MirthServers)
+        //    {
+        //        if (mirthServer.ConfigMap == null)
+        //        {
+        //            mirthServer.GetConfigMap();
+        //        }
+
+        //        if (mirthServer.ConfigMap != null)
+        //        {
+        //            mirthServer.ConfigMap.AddEntry(key, value, comment);
+
+        //            res &= mirthServer.PutConfigMap(out string resultString);
+
+        //            if (!string.IsNullOrEmpty(resultString))
+        //                result += mirthServer.Alias + " - " + resultString + Environment.NewLine;
+        //        }
+        //    }
+        //    return res;
+        //}
+
+        public bool ConfigMapGetEntry(string key, out string result)
+        {
+            bool res = false;
+            result = string.Empty;
+
+            // Get the value from the first Mirth server
+            if (MirthServers.Count > 0)
+            {
+                res = MirthServers[0].ConfigMapGetEntry(key, out result);
+            }
+            return res;
+        }
+
+        public bool ConfigMapUpdateEntry(string key, string value, string comment, bool appendValue, bool appendComment, out string result)
+        {
+            bool res = true;
+            result = string.Empty;
+
+            // Loop through all the servers
+            foreach (MirthServer mirthServer in MirthServers)
+            {
+                res &= mirthServer.ConfigMapUpdateEntry(key, value, comment, appendValue, appendComment, out string resultString);
+
+                if (!string.IsNullOrEmpty(resultString))
+                    result += mirthServer.Alias + " - " + resultString + Environment.NewLine;
+            }
+            return res;
+        }
+
+        public bool ConfigMapRemoveEntry(string key, out string result)
+        {
+            bool res = true;
+            result = string.Empty;
+
+            // Loop through all the servers
+            foreach (MirthServer mirthServer in MirthServers)
+            {
+                res &= mirthServer.ConfigMapRemoveEntry(key, out string resultString);
+
+                if (!string.IsNullOrEmpty(resultString))
+                    result += mirthServer.Alias + " - " + resultString + Environment.NewLine;
+            }
+            return res;
+        }
+
+        public bool AddTrizettoRemitInboundSA(string sa, string name, string contacts, string loggedInUser, out string result)
+        {
+            bool res = true;
+            result = string.Empty;
+
+            string gatewayUser = "C" + sa.PadLeft(3, '0');            
+            string comment = $"Added by user [{loggedInUser}] on {DateTime.Now}";
+
+            string key = sa + ".gatewayUser";
+            string value = gatewayUser;
+
+            if (res &= ConfigMapUpdateEntry(key, value, comment, false, true, out result))
+            {
+                if (!string.IsNullOrEmpty(name))
+                {
+                    key = sa + ".name";
+                    value = name;
+                    res &= ConfigMapUpdateEntry(key, value, comment, false, true, out result);
+                }
+
+                if (!string.IsNullOrEmpty(contacts))
+                {
+                    key = sa + ".contacts";
+                    value = contacts;
+                    res &= ConfigMapUpdateEntry(key, value, comment, false, true, out result);
+                }
+
+                // Add SA to filter list
+                res &= ConfigMapUpdateEntry("Gateway EDI remit Inbound - ALL SAs_SAFilter", "," + sa, Environment.NewLine + $"SA {sa} " + comment, true, true, out result);
+            }
+
+            return res;
+        }
+
+        public bool RemoveTrizettoRemitInboundSA(string sa, string loggedInUser, out string result)
+        {
+            bool res = true;
+            result = string.Empty;
+
+            string comment = $"Removed by user [{loggedInUser}] on {DateTime.Now}";
+            string key = sa + ".gatewayUser";
+
+            if (res &= ConfigMapRemoveEntry(key, out result))
+            {
+                key = sa + ".name";
+                res &= ConfigMapRemoveEntry(key, out result);
+
+                key = sa + ".contacts";
+                res &= ConfigMapRemoveEntry(key, out result);
+
+                // Remove SA from filter list
+                string configKey = "Gateway EDI remit Inbound - ALL SAs_SAFilter";
+                if (res &= ConfigMapGetEntry(configKey, out string saFilter))
+                {
+                    var newSAList = string.Join(",", saFilter.Split(',').Where(s => s != sa));
+                    res &= ConfigMapUpdateEntry(configKey, newSAList, Environment.NewLine + $"SA {sa} " + comment, true, true, out result);
+                }
+            }
+
+            return res;
         }
 
         public bool StartChannels(List<string> channelIds, bool returnErrors, out string statusMsg)

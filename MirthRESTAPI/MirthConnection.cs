@@ -115,6 +115,17 @@ namespace org.ochin.interoperability.OCHINInterfaceUtilities.Mirth
             return HttpGet("server/channelTags", out tags);
         }
 
+        public bool GetConfigMap(out string configMap)
+        {
+            return HttpGet("server/configurationMap", out configMap);
+        }
+
+        public bool PutConfigMap(string configMap, out string resultString)
+        {
+            HttpContent content = new StringContent(configMap, Encoding.Default, "application/xml");
+            return HttpPut("server/configurationMap", content, out resultString);
+        }
+
         public bool StopChannels(List<string> channelIds, bool returnErrors, out string statusMsg)
         {
             List<KeyValuePair<string, string>> c = new List<KeyValuePair<string, string>>();
@@ -181,10 +192,25 @@ namespace org.ochin.interoperability.OCHINInterfaceUtilities.Mirth
 
         private bool HttpGet(string requestPath, out string resultString)
         {
-            HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Get, requestPath);
+            return HttpRequest(HttpMethod.Get, requestPath, null, out resultString);
+        }
+
+        private bool HttpPut(string requestPath, HttpContent content, out string resultString)
+        {
+            return HttpRequest(HttpMethod.Put, requestPath, content, out resultString);
+        }
+
+        private bool HttpRequest(HttpMethod method, string requestPath, HttpContent content, out string resultString)
+        {
+            HttpRequestMessage request = new HttpRequestMessage(method, requestPath);
+            request.Content = content;
             HttpResponseMessage result = Client.SendAsync(request).Result;
 
             resultString = result.Content.ReadAsStringAsync().Result;
+            if (!result.IsSuccessStatusCode)
+            {
+                resultString = result.StatusCode + " - " + result.ReasonPhrase;
+            }
 
             return result.IsSuccessStatusCode;
         }

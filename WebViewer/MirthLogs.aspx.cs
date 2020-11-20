@@ -2,6 +2,7 @@
 using System;
 using System.Configuration;
 using System.Web.UI;
+using System.Web.UI.WebControls;
 
 namespace org.ochin.interoperability.OCHINInterfaceUtilities
 {
@@ -130,6 +131,24 @@ namespace org.ochin.interoperability.OCHINInterfaceUtilities
                 _ = vm.ListFiles(tbSearchFiles.Value, cbIgnoreCase.Checked, cbRegEx.Checked, out string result, out string cmdExecuted);
                 tbSearchResults.Text = result;
                 lblCmd.Text = cmdExecuted;
+            }
+        }
+
+        protected void btnRefreshLogFilesList_Click(object sender, EventArgs e)
+        {
+            MirthSSHVM vm = (MirthSSHVM)Session[SessionKey_MirthLogs_MirthSSHVM];
+            if (vm != null)
+            {
+                ddlLogFiles.Items.Clear();
+
+                _ = vm.ListUniqueFiles(out string result, out string cmdExecuted);
+                lblCmd.Text = cmdExecuted;
+
+                foreach (string logFile in result.Split(new char[] { '\n' }, StringSplitOptions.RemoveEmptyEntries))
+                {
+                    if (!logFile.StartsWith("."))
+                        ddlLogFiles.Items.Add(logFile);
+                }
             }
         }
 

@@ -128,6 +128,8 @@
     <Content Include="Images\outline_build_black_48dp.png" />
     <Content Include="Images\outline_find_in_page_black_48dp.png" />
     <Content Include="Images\outline_info_black_48dp.png" />
+    <Content Include="Images\outline_text_snippet_black_48dp.png" />
+    <Content Include="MirthConfigMap.aspx" />
     <Content Include="MirthInventory.aspx" />
     <Content Include="EpicMaintenance.aspx" />
     <Content Include="favicon.ico" />
@@ -397,6 +399,13 @@
     </Compile>
     <Compile Include="Default.aspx.designer.cs">
       <DependentUpon>Default.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="MirthConfigMap.aspx.cs">
+      <DependentUpon>MirthConfigMap.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="MirthConfigMap.aspx.designer.cs">
+      <DependentUpon>MirthConfigMap.aspx</DependentUpon>
     </Compile>
     <Compile Include="MirthInventory.aspx.cs">
       <DependentUpon>MirthInventory.aspx</DependentUpon>

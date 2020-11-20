@@ -156,12 +156,13 @@
                         <asp:Button CssClass="btn btn-secondary" ID="btnFilterMirthInventory" runat="server" Text="Apply Filters" OnClientClick="return filterMirthInventory();" />
                     </div>
                     <div style="overflow:auto;max-height:400px">
-                        <asp:GridView ID="gridMirthInventory" runat="server" AllowSorting="True" SelectedRowStyle-BackColor="#00CC00" AutoGenerateColumns="False">
+                        <asp:GridView ID="gridMirthInventory" runat="server" AllowSorting="True" SelectedRowStyle-BackColor="#00CC00" AutoGenerateColumns="False"
+                            OnSorting="gridMirthInventory_Sorting" DataKeyNames="name">
                             <Columns>
-                                <asp:BoundField DataField="name" HeaderText="Name"></asp:BoundField>
-                                <asp:BoundField DataField="tags" HeaderText="Tags" />
-                                <asp:BoundField DataField="server" HeaderText="Server"></asp:BoundField>
-                                <asp:BoundField DataField="state" HeaderText="State"></asp:BoundField>
+                                <asp:BoundField DataField="name" HeaderText="Name" SortExpression="name" />
+                                <asp:BoundField DataField="tags" HeaderText="Tags" SortExpression="tags" />
+                                <asp:BoundField DataField="server" HeaderText="Server" SortExpression="server" />
+                                <asp:BoundField DataField="state" HeaderText="State" SortExpression="state" />
                                 <asp:BoundField DataField="description" HeaderText="Description"></asp:BoundField>
                             </Columns>
                         </asp:GridView>
