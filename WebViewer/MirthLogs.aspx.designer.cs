@@ -15,6 +15,24 @@ namespace org.ochin.interoperability.OCHINInterfaceUtilities
     {
 
         /// <summary>
+        /// rblistMirthEnvs control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.RadioButtonList rblistMirthEnvs;
+
+        /// <summary>
+        /// rblistLogLocations control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.RadioButtonList rblistLogLocations;
+
+        /// <summary>
         /// tbUsername control.
         /// </summary>
         /// <remarks>

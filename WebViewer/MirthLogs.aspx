@@ -16,22 +16,38 @@
     </div>
     <div class="row">
         <div class="card col-md-4">
-            <div class="card-header">Credentials</div>
-            <div class="card-body">
-                <div class="py-md-1">
-                    <asp:Label runat="server" Text="Username: "></asp:Label>
-                    <asp:TextBox ID="tbUsername" runat="server"></asp:TextBox>
+            <div class="card my-2">
+                <div class="card-header">Environment</div>
+                <div class="card-body">
+                    <asp:RadioButtonList ID="rblistMirthEnvs" runat="server" RepeatDirection="Horizontal" CellPadding="5">
+                    </asp:RadioButtonList>
                 </div>
-                <div class="py-md-1">
-                    <asp:Label runat="server" Text="Password: "></asp:Label>
-                    <asp:TextBox ID="tbPassword" runat="server" TextMode="Password"></asp:TextBox>
+            </div>
+            <div class="card my-2">
+                <div class="card-header">Location</div>
+                <div class="card-body">
+                    <asp:RadioButtonList ID="rblistLogLocations" runat="server" RepeatDirection="Horizontal" CellPadding="5">
+                    </asp:RadioButtonList>
                 </div>
-                <div class="py-md-1">
-                    <asp:Button CssClass="btn btn-dark" Text="Login" runat="server" ID="btnLogin" OnClick="btnLogin_Click" />
-                    <asp:Button CssClass="btn btn-dark" Text="Logout" runat="server" ID="btnLogout" OnClick="btnLogout_Click" Enabled="false" />
-                </div>
-                <div class="py-md-1">
-                    <asp:Label ID="lblStatusMsg" runat="server" Text="" ForeColor="Red"></asp:Label>
+            </div>
+            <div class="card my-2">
+                <div class="card-header">Credentials</div>
+                <div class="card-body">
+                    <div class="py-md-1">
+                        <asp:Label runat="server" Text="Username: "></asp:Label>
+                        <asp:TextBox ID="tbUsername" runat="server"></asp:TextBox>
+                    </div>
+                    <div class="py-md-1">
+                        <asp:Label runat="server" Text="Password: "></asp:Label>
+                        <asp:TextBox ID="tbPassword" runat="server" TextMode="Password"></asp:TextBox>
+                    </div>
+                    <div class="py-md-1">
+                        <asp:Button CssClass="btn btn-dark" Text="Login" runat="server" ID="btnLogin" OnClick="btnLogin_Click" />
+                        <asp:Button CssClass="btn btn-dark" Text="Logout" runat="server" ID="btnLogout" OnClick="btnLogout_Click" Enabled="false" />
+                    </div>
+                    <div class="py-md-1">
+                        <asp:Label ID="lblStatusMsg" runat="server" Text="" ForeColor="Red"></asp:Label>
+                    </div>
                 </div>
             </div>
         </div>
