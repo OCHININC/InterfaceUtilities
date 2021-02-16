@@ -15,6 +15,7 @@ namespace org.ochin.interoperability.OCHINInterfaceUtilities.Mirth
         public string Server { get; private set; }
         public string Description { get; set; }
         public SourceConnector SourceConn { get; private set; }
+        public List<DestinationConnector> DestinationConns { get; set; }
 
         public MirthChannel(string id, string name, string server, string state = "", string description = "")
         {
@@ -25,6 +26,26 @@ namespace org.ochin.interoperability.OCHINInterfaceUtilities.Mirth
             Description = description;
 
             SourceConn = new SourceConnector();
+            DestinationConns = new List<DestinationConnector>();
+        }
+
+        public void ParseDestinationConnectors(XmlNodeList connectors)
+        {
+            foreach(XmlNode connector in connectors)
+            {
+                string name = connector.SelectSingleNode("descendant::name").InnerText;
+                string enabled = connector.SelectSingleNode("descendant::enabled").InnerText;
+                string transportName = connector.SelectSingleNode("descendant::transportName").InnerText;
+
+                DestinationConns.Add(
+                    new DestinationConnector()
+                    {
+                        Name = name,
+                        Enabled = bool.Parse(enabled),
+                        TransportName = transportName
+                    }
+                );
+            }
         }
 
         public XmlDocument ToXml()
@@ -55,6 +76,14 @@ namespace org.ochin.interoperability.OCHINInterfaceUtilities.Mirth
             var sourceConnector = doc.ImportNode(SourceConn.ToXml().DocumentElement, true);
             channel.AppendChild(sourceConnector);
 
+            var destinationConnectors = doc.CreateElement("destinationConnectors");
+            foreach (var dc in DestinationConns)
+            {
+                var destinationConnector = doc.ImportNode(dc.ToXml().DocumentElement, true);
+                destinationConnectors.AppendChild(destinationConnector);
+            }
+            channel.AppendChild(destinationConnectors);
+
             doc.AppendChild(channel);
 
             return doc;
@@ -79,6 +108,35 @@ namespace org.ochin.interoperability.OCHINInterfaceUtilities.Mirth
                 sourceConnector.AppendChild(transportName);
 
                 doc.AppendChild(sourceConnector);
+
+                return doc;
+            }
+        }
+
+        public class DestinationConnector
+        {
+            public string Name { get; set; }
+            public bool Enabled { get; set; }
+            public string TransportName { get; set; }
+
+            public XmlDocument ToXml()
+            {
+                XmlDocument doc = new XmlDocument();
+                var destConnector = doc.CreateElement("destinationConnector");
+
+                var name = doc.CreateElement("name");
+                name.InnerText = Name;
+                destConnector.AppendChild(name);
+
+                var enabled = doc.CreateElement("enabled");
+                enabled.InnerText = Enabled.ToString();
+                destConnector.AppendChild(enabled);
+
+                var transportName = doc.CreateElement("transportName");
+                transportName.InnerText = TransportName;
+                destConnector.AppendChild(transportName);
+
+                doc.AppendChild(destConnector);
 
                 return doc;
             }

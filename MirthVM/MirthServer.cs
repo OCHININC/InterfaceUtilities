@@ -50,16 +50,19 @@ namespace org.ochin.interoperability.OCHINInterfaceUtilities.Mirth
                 string name = channel.SelectSingleNode("descendant::name")?.InnerText;
                 string description = channel.SelectSingleNode("descendant::description")?.InnerText;
                 string sourceConnectorTransportName = channel.SelectSingleNode("descendant::sourceConnector/transportName")?.InnerText;
+                XmlNodeList destinationConnectors = channel.SelectNodes("descendant::destinationConnectors/connector");
 
                 if (Channels.ContainsKey(id))
                 {
                     Channels[id].Description = description;
                     Channels[id].SourceConn.TransportName = sourceConnectorTransportName;
+                    Channels[id].ParseDestinationConnectors(destinationConnectors);
                 }
                 else if (!updateOnly)
                 {
                     MirthChannel c = new MirthChannel(id, name, Alias, string.Empty, description);
                     c.SourceConn.TransportName = sourceConnectorTransportName;
+                    c.ParseDestinationConnectors(destinationConnectors);
                     Channels.Add(c.ChannelId, c);
                 }
             }

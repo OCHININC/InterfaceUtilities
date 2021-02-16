@@ -215,6 +215,7 @@ namespace org.ochin.interoperability.OCHINInterfaceUtilities
             btnGetMirthInventory.Enabled = true;
             rblistMirthEnvs.Enabled = false;
             cbIncludeDesc.Enabled = true;
+            btnFilterMirthInventory.Enabled = true;
         }
 
         private void MirthUserLoggedOut()
@@ -224,6 +225,7 @@ namespace org.ochin.interoperability.OCHINInterfaceUtilities
             btnGetMirthInventory.Enabled = false;
             rblistMirthEnvs.Enabled = true;
             cbIncludeDesc.Enabled = false;
+            btnFilterMirthInventory.Enabled = false;
         }
     }
 }

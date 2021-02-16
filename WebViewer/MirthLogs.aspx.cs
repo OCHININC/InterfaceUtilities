@@ -158,6 +158,7 @@ namespace org.ochin.interoperability.OCHINInterfaceUtilities
             btnLogout.Enabled = true;
             btnSearch.Enabled = true;
             btnListFiles.Enabled = true;
+            btnRefreshLogFilesList.Enabled = true;
         }
 
         private void UserLoggedOut()
@@ -166,6 +167,7 @@ namespace org.ochin.interoperability.OCHINInterfaceUtilities
             btnLogout.Enabled = false;
             btnSearch.Enabled = false;
             btnListFiles.Enabled = false;
+            btnRefreshLogFilesList.Enabled = false;
         }
     }
 }
